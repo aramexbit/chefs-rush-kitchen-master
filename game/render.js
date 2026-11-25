@@ -58,8 +58,8 @@ export function drawFood(c, item, x, y, s, pct) {
   c.save(); c.translate(x, y);
   if (item === 'bun') {
     const toasted = p >= 60;
-    c.fillStyle = toasted ? '#b96f1e' : '#d98f2e'; rr(c, -u, -u * 0.1, s, u * 0.7, u * 0.3); c.fill();
-    c.fillStyle = toasted ? '#e8a33c' : '#f2b95c'; c.beginPath(); c.arc(0, -u * 0.1, u, Math.PI, 0); c.fill();
+    c.fillStyle = toasted ? '#b96f1e' : '#e8a33c'; rr(c, -u, -u * 0.1, s, u * 0.7, u * 0.3); c.fill();
+    c.fillStyle = toasted ? '#e8a33c' : '#ffc95e'; c.beginPath(); c.arc(0, -u * 0.1, u, Math.PI, 0); c.fill();
     if (toasted) {
       c.fillStyle = 'rgba(255,240,200,0.55)';
       c.beginPath(); c.arc(-u * 0.3, -u * 0.45, u * 0.35, Math.PI, 0); c.fill();
@@ -87,32 +87,32 @@ export function drawFood(c, item, x, y, s, pct) {
       c.fillStyle = 'rgba(0,0,0,0.35)'; circle(c, 0, 0, u * 0.7); c.fill();
     }
   } else if (item === 'lettuce') {
-    c.fillStyle = '#3f9e4d';
+    c.fillStyle = '#2fbf4a';
     for (let i = 0; i < 5; i++) { const a = (i / 5) * Math.PI * 2; circle(c, Math.cos(a) * u * 0.55, Math.sin(a) * u * 0.55, u * 0.45); c.fill(); }
-    c.fillStyle = '#7ed491'; circle(c, 0, 0, u * 0.5); c.fill();
+    c.fillStyle = '#8ee6a0'; circle(c, 0, 0, u * 0.5); c.fill();
   } else if (item === 'tomato') {
-    c.fillStyle = '#d8342a'; circle(c, 0, 0, u * 0.9); c.fill();
-    c.fillStyle = '#f2604f'; circle(c, -u * 0.2, -u * 0.2, u * 0.55); c.fill();
-    c.fillStyle = '#3f9e4d'; c.beginPath(); c.moveTo(0, -u * 0.9); c.lineTo(-u * 0.3, -u * 0.5); c.lineTo(u * 0.3, -u * 0.5); c.closePath(); c.fill();
+    c.fillStyle = '#ff3b2e'; circle(c, 0, 0, u * 0.9); c.fill();
+    c.fillStyle = '#ff7a6a'; circle(c, -u * 0.2, -u * 0.2, u * 0.55); c.fill();
+    c.fillStyle = '#2fbf4a'; c.beginPath(); c.moveTo(0, -u * 0.9); c.lineTo(-u * 0.3, -u * 0.5); c.lineTo(u * 0.3, -u * 0.5); c.closePath(); c.fill();
   } else if (item === 'onion') {
-    c.strokeStyle = '#c9a0d8'; c.lineWidth = u * 0.22;
+    c.strokeStyle = '#d8a0e8'; c.lineWidth = u * 0.22;
     [0.85, 0.55, 0.28].forEach(r => { circle(c, 0, 0, u * r); c.stroke(); });
-    c.fillStyle = '#e8d0f0'; circle(c, 0, 0, u * 0.16); c.fill();
+    c.fillStyle = '#f2dcf8'; circle(c, 0, 0, u * 0.16); c.fill();
   } else if (item === 'cheese') {
     const melted = p >= 60;
-    c.fillStyle = melted ? '#f7b62e' : '#f7c948';
+    c.fillStyle = melted ? '#ffae00' : '#ffc21a';
     c.beginPath(); c.moveTo(-u, u * 0.7); c.lineTo(u, u * 0.7); c.lineTo(0, -u * 0.8); c.closePath(); c.fill();
     if (melted) {
       // lelehan keju menetes di bawah
-      c.fillStyle = '#f7b62e';
+      c.fillStyle = '#ffae00';
       [-0.5, 0.1, 0.55].forEach(o => { circle(c, o * u, u * 0.85, u * 0.16); c.fill(); });
       c.fillStyle = 'rgba(255,235,160,0.6)';
       c.beginPath(); c.moveTo(-u * 0.5, u * 0.2); c.lineTo(u * 0.3, u * 0.2); c.lineTo(0, -u * 0.5); c.closePath(); c.fill();
     }
-    c.fillStyle = '#e8a91e'; circle(c, -u * 0.2, u * 0.25, u * 0.14); c.fill(); circle(c, u * 0.25, u * 0.05, u * 0.11); c.fill();
+    c.fillStyle = '#f7a91e'; circle(c, -u * 0.2, u * 0.25, u * 0.14); c.fill(); circle(c, u * 0.25, u * 0.05, u * 0.11); c.fill();
   } else if (item === 'pickle') {
-    c.fillStyle = '#6f9e3f'; c.beginPath(); c.ellipse(0, 0, u * 0.95, u * 0.55, 0, 0, Math.PI * 2); c.fill();
-    c.fillStyle = '#9ccb6a';
+    c.fillStyle = '#7ec24a'; c.beginPath(); c.ellipse(0, 0, u * 0.95, u * 0.55, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#b0dc7a';
     [[-0.45, -0.1], [0, 0.12], [0.45, -0.08]].forEach(p => { circle(c, p[0] * u, p[1] * u, u * 0.1); c.fill(); });
   } else if (item === 'chicken') {
     // mentah pucat kemerahan -> keemasan -> gosong
@@ -138,7 +138,7 @@ export function drawFood(c, item, x, y, s, pct) {
     else if (p <= 90) stick = '#f2c14e';
     else if (p <= 100) stick = mix('#f2c14e', '#8a5a2e', (p - 90) / 10);
     else stick = '#3a2410';
-    c.fillStyle = '#d8342a'; rr(c, -u * 0.7, -u * 0.2, u * 1.4, u * 0.9, u * 0.15); c.fill();
+    c.fillStyle = '#ff3b2e'; rr(c, -u * 0.7, -u * 0.2, u * 1.4, u * 0.9, u * 0.15); c.fill();
     c.strokeStyle = stick; c.lineWidth = u * 0.28;
     [-0.4, 0, 0.4].forEach(o => { c.beginPath(); c.moveTo(o * u, -u * 0.2); c.lineTo(o * u, -u * 0.95); c.stroke(); });
     if (p >= 26 && p <= 100) {
@@ -152,8 +152,8 @@ export function drawFood(c, item, x, y, s, pct) {
     c.fillStyle = '#ffffff'; circle(c, 0, 0, u * 0.95); c.fill();
     c.restore();
     const yolkR = u * (0.62 - 0.12 * cooked);
-    c.fillStyle = p > 100 ? '#8a5a1e' : '#f7c948'; circle(c, 0, 0, yolkR); c.fill();
-    c.fillStyle = p > 100 ? '#5a3410' : '#e8a91e'; circle(c, 0, 0, yolkR * 0.6); c.fill();
+    c.fillStyle = p > 100 ? '#8a5a1e' : '#ffc21a'; circle(c, 0, 0, yolkR); c.fill();
+    c.fillStyle = p > 100 ? '#5a3410' : '#f7a91e'; circle(c, 0, 0, yolkR * 0.6); c.fill();
     if (p > 100) {
       c.strokeStyle = '#5a3410'; c.lineWidth = 3;
       c.beginPath(); c.arc(0, 0, u * 0.9, 0, Math.PI * 2); c.stroke();
@@ -162,8 +162,8 @@ export function drawFood(c, item, x, y, s, pct) {
       c.beginPath(); c.arc(-u * 0.3, -u * 0.35, u * 0.22, Math.PI, 0); c.fill();
     }
   } else if (item === 'bread') {
-    c.fillStyle = '#e8b96a'; rr(c, -u * 0.85, -u * 0.85, u * 1.7, u * 1.7, u * 0.3); c.fill();
-    c.fillStyle = '#f7e3b0'; rr(c, -u * 0.65, -u * 0.65, u * 1.3, u * 1.3, u * 0.2); c.fill();
+    c.fillStyle = '#f2c478'; rr(c, -u * 0.85, -u * 0.85, u * 1.7, u * 1.7, u * 0.3); c.fill();
+    c.fillStyle = '#ffedb8'; rr(c, -u * 0.65, -u * 0.65, u * 1.3, u * 1.3, u * 0.2); c.fill();
   }
   c.restore();
 }
@@ -224,25 +224,25 @@ export function drawFace(c, custIdx, x, y, r, mood) {
 
 // ---- Latar dapur ----
 function drawBackground(c, g) {
-  // dinding krem bersih (tanpa pola — tenang dan jernih)
+  // dinding krem cerah (tanpa pola — tenang dan jernih)
   const wall = c.createLinearGradient(0, 0, 0, 200);
-  wall.addColorStop(0, '#faf3e0'); wall.addColorStop(1, '#f0dfbc');
+  wall.addColorStop(0, '#fff8e6'); wall.addColorStop(1, '#ffe9b0');
   c.fillStyle = wall; c.fillRect(0, 0, W, 200);
-  // lantai kayu: papan horizontal dengan garis sambungan yang halus
-  c.fillStyle = '#e6cf9f'; c.fillRect(0, 200, W, H - 200);
-  c.fillStyle = 'rgba(255,255,255,0.16)';
+  // lantai kayu terang: papan horizontal dengan garis sambungan yang halus
+  c.fillStyle = '#f0d49a'; c.fillRect(0, 200, W, H - 200);
+  c.fillStyle = 'rgba(255,255,255,0.22)';
   for (let y = 200; y < H; y += 128) c.fillRect(0, y, W, 64);
-  c.strokeStyle = '#d3b57e'; c.lineWidth = 2;
+  c.strokeStyle = '#e0c184'; c.lineWidth = 2;
   for (let y = 200; y < H; y += 64) { c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); }
   // garis dasar dinding (baseboard) — rapi, bukan karpet
-  c.fillStyle = '#b98d4f'; c.fillRect(0, 196, W, 6);
+  c.fillStyle = '#d4a55e'; c.fillRect(0, 196, W, 6);
 }
 
 // ---- Bar atas ----
 function drawTopBar(c, g) {
   const b = L.top;
   const grad = c.createLinearGradient(0, 0, 0, 60);
-  grad.addColorStop(0, '#5a3418'); grad.addColorStop(1, '#3a2110');
+  grad.addColorStop(0, '#7a4a22'); grad.addColorStop(1, '#54331a');
   c.fillStyle = grad; c.fillRect(b.x, b.y, b.w, b.h);
   // logo
   c.fillStyle = '#ffffff'; c.beginPath(); c.arc(36, 24, 12, Math.PI, 0); c.fill();
@@ -251,16 +251,16 @@ function drawTopBar(c, g) {
   text(c, "CHEF'S RUSH", 62, 24, 22, '#ffd76a', 'left');
   text(c, 'KITCHEN MASTER', 62, 44, 10, '#f7e8c8', 'left');
   if (g.level) {
-    pill(c, 268, 14, 92, 32, '#2b1a10', '#ffd76a');
+    pill(c, 268, 14, 92, 32, '#3a2412', '#ffd76a');
     text(c, 'LEVEL ' + g.levelN, 314, 31, 15, '#ffd76a');
   }
   // timer
   if (g.screen === 'playing' || g.screen === 'paused') {
     const m = Math.floor(g.timeLeft / 60), s = Math.floor(g.timeLeft % 60);
-    pill(c, 380, 12, 150, 36, g.timeLeft < 30 ? '#7a1e1e' : '#2b1a10', '#ffffff');
+    pill(c, 380, 12, 150, 36, g.timeLeft < 30 ? '#7a1e1e' : '#3a2412', '#ffffff');
     text(c, (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s, 455, 31, 20, '#ffffff');
     const frac = g.level ? g.timeLeft / g.level.shift : 0;
-    c.fillStyle = frac < 0.2 ? '#e2483d' : '#58b368';
+    c.fillStyle = frac < 0.2 ? '#ff5a4d' : '#4cc464';
     rr(c, 392, 42, 126 * frac, 5, 2); c.fill();
   }
   // koin & skor
@@ -274,13 +274,13 @@ function drawTopBar(c, g) {
     for (let i = 0; i < 3; i++) {
       const th = [g.level.target, g.level.star2, g.level.star3][i];
       const got = g.score >= th;
-      drawStar(c, 900 + i * 34, 30, 13, got ? '#ffd76a' : '#5a4a38');
+      drawStar(c, 900 + i * 34, 30, 13, got ? '#ffd76a' : '#7a6a50');
     }
   }
   // tombol mute & pause
-  pill(c, L.muteBtn.x, L.muteBtn.y, L.muteBtn.w, L.muteBtn.h, '#2b1a10', '#ffffff');
+  pill(c, L.muteBtn.x, L.muteBtn.y, L.muteBtn.w, L.muteBtn.h, '#3a2412', '#ffffff');
   text(c, g.save.muted ? 'OFF' : 'ON', L.muteBtn.x + 18, L.muteBtn.y + 21, 10, '#ffffff');
-  pill(c, L.pauseBtn.x, L.pauseBtn.y, L.pauseBtn.w, L.pauseBtn.h, '#2b1a10', '#ffffff');
+  pill(c, L.pauseBtn.x, L.pauseBtn.y, L.pauseBtn.w, L.pauseBtn.h, '#3a2412', '#ffffff');
   text(c, g.screen === 'paused' ? '▶' : '❚❚', L.pauseBtn.x + 18, L.pauseBtn.y + 21, 15, '#ffffff');
 }
 function drawStar(c, x, y, r, color) {
@@ -296,16 +296,16 @@ function drawStar(c, x, y, r, color) {
 
 // ---- Rel pelanggan (kiri) ----
 function drawLeftRail(c, g) {
-  c.fillStyle = '#3a2110'; c.fillRect(L.railL.x, L.railL.y, L.railL.w, L.railL.h);
-  c.fillStyle = '#5a3418'; c.fillRect(L.railL.x, L.railL.y, L.railL.w, 34);
+  c.fillStyle = '#54331a'; c.fillRect(L.railL.x, L.railL.y, L.railL.w, L.railL.h);
+  c.fillStyle = '#7a4a22'; c.fillRect(L.railL.x, L.railL.y, L.railL.w, 34);
   text(c, 'PELANGGAN', 98, L.railL.y + 18, 15, '#ffd76a');
   for (let i = 0; i < 3; i++) {
     const y = L.railL.y + 44 + i * 210;
-    rr(c, 10, y, 176, 196, 12); c.fillStyle = i % 2 ? '#4a2c14' : '#54331a'; c.fill();
-    c.strokeStyle = '#8a5a2e'; c.lineWidth = 2; c.stroke();
+    rr(c, 10, y, 176, 196, 12); c.fillStyle = i % 2 ? '#6b4423' : '#7a4e28'; c.fill();
+    c.strokeStyle = '#b98d4f'; c.lineWidth = 2; c.stroke();
     const o = g.orders[i];
     if (!o) {
-      text(c, '— kosong —', 98, y + 98, 14, '#a08060', 'center', false);
+      text(c, '— kosong —', 98, y + 98, 14, '#c9a06a', 'center', false);
       continue;
     }
     const cust = CUSTOMERS[o.cust];
@@ -314,8 +314,8 @@ function drawLeftRail(c, g) {
     drawFace(c, o.cust, 98, y + 62 + bob, 42, o.mood);
     text(c, cust.name, 98, y + 128, 16, '#ffffff');
     // bar kesabaran
-    rr(c, 28, y + 146, 140, 12, 6); c.fillStyle = '#221610'; c.fill();
-    c.fillStyle = frac > 0.5 ? '#58b368' : frac > 0.25 ? '#f7c948' : '#e2483d';
+    rr(c, 28, y + 146, 140, 12, 6); c.fillStyle = '#2e1a10'; c.fill();
+    c.fillStyle = frac > 0.5 ? '#4cc464' : frac > 0.25 ? '#ffc21a' : '#ff5a4d';
     rr(c, 28, y + 146, 140 * frac, 12, 6); c.fill();
     text(c, RECIPES[o.recipeId].name, 98, y + 176, 12, '#ffd76a', 'center', false);
   }
@@ -329,18 +329,18 @@ function drawBins(c, g) {
     const empty = stock <= 0;
     // nampan baja
     const grad = c.createLinearGradient(b.x, b.y, b.x, b.y + b.h);
-    grad.addColorStop(0, '#e8ebef'); grad.addColorStop(1, '#9aa0a8');
+    grad.addColorStop(0, '#f2f4f6'); grad.addColorStop(1, '#b8bec4');
     rr(c, b.x, b.y, b.w, b.h, 8); c.fillStyle = grad; c.fill();
-    c.strokeStyle = '#6a7076'; c.lineWidth = 2; c.stroke();
+    c.strokeStyle = '#8a9096'; c.lineWidth = 2; c.stroke();
     // kilau atas nampan
     c.fillStyle = 'rgba(255,255,255,0.5)'; rr(c, b.x + 4, b.y + 3, b.w - 8, 5, 2); c.fill();
-    if (empty) { c.fillStyle = 'rgba(40,30,20,0.45)'; rr(c, b.x, b.y, b.w, b.h, 8); c.fill(); }
+    if (empty) { c.fillStyle = 'rgba(40,30,20,0.3)'; rr(c, b.x, b.y, b.w, b.h, 8); c.fill(); }
     drawFood(c, b.id, b.x + b.w / 2, b.y + 32, 44);
     // label + stok
-    pill(c, b.x + 4, b.y + b.h - 21, b.w - 8, 17, 'rgba(20,12,6,0.88)');
+    pill(c, b.x + 4, b.y + b.h - 21, b.w - 8, 17, 'rgba(30,18,8,0.85)');
     text(c, ing.name.toUpperCase(), b.x + b.w / 2, b.y + b.h - 12, 10, '#ffffff');
     if (stock < ing.maxStock) {
-      pill(c, b.x + b.w - 20, b.y + 2, 18, 16, '#7a1e1e');
+      pill(c, b.x + b.w - 20, b.y + 2, 18, 16, '#a02828');
       text(c, String(stock), b.x + b.w - 11, b.y + 11, 11, '#ffffff');
     }
     if (g.held && g.held.kind === 'item' && g.held.item === b.id && g.held.quality === 'raw') {
@@ -360,13 +360,13 @@ function emptySlot(c, x, y) {
   c.restore();
 }
 function cookBar(c, x, y, w, pct) {
-  rr(c, x, y, w, 10, 5); c.fillStyle = '#221610'; c.fill();
-  let col = '#58b368';
-  if (pct < 26) col = '#9aa0a8'; else if (pct <= 70) col = '#f7c948';
-  else if (pct <= 90) col = '#58b368'; else if (pct <= 100) col = '#e8862e'; else col = '#3a3a3a';
+  rr(c, x, y, w, 10, 5); c.fillStyle = '#2e1a10'; c.fill();
+  let col = '#4cc464';
+  if (pct < 26) col = '#b8bec4'; else if (pct <= 70) col = '#ffc21a';
+  else if (pct <= 90) col = '#4cc464'; else if (pct <= 100) col = '#ff8a2e'; else col = '#3a3a3a';
   c.fillStyle = col; rr(c, x, y, w * Math.min(1, pct / 100), 10, 5); c.fill();
-  if (pct > 90 && pct <= 100) { text(c, 'ANGKAT!', x + w / 2, y - 8, 11, '#e8862e'); }
-  if (pct > 100) { text(c, 'GOSONG!', x + w / 2, y - 8, 11, '#e2483d'); }
+  if (pct > 90 && pct <= 100) { text(c, 'ANGKAT!', x + w / 2, y - 8, 11, '#ff8a2e'); }
+  if (pct > 100) { text(c, 'GOSONG!', x + w / 2, y - 8, 11, '#ff5a4d'); }
 }
 function drawFlame(c, x, y, t, s) {
   const f = 0.7 + 0.3 * Math.sin(t * 9 + x);
@@ -380,12 +380,12 @@ function drawFlame(c, x, y, t, s) {
 function drawStations(c, g) {
   // --- Talenan ---
   const ch = L.chop;
-  rr(c, ch.x, ch.y, ch.w, ch.h, 12); c.fillStyle = '#8a5a2e'; c.fill();
-  c.strokeStyle = '#5a3418'; c.lineWidth = 3; c.stroke();
+  rr(c, ch.x, ch.y, ch.w, ch.h, 12); c.fillStyle = '#a87c3e'; c.fill();
+  c.strokeStyle = '#7a4a22'; c.lineWidth = 3; c.stroke();
   text(c, 'TALENAN', ch.x + ch.w / 2, ch.y + 18, 14, '#ffd76a');
   // papan kayu
-  rr(c, ch.x + 18, ch.y + 36, ch.w - 36, 92, 8); c.fillStyle = '#d8a860'; c.fill();
-  c.strokeStyle = '#a87c3e'; c.lineWidth = 2; c.stroke();
+  rr(c, ch.x + 18, ch.y + 36, ch.w - 36, 92, 8); c.fillStyle = '#e8bc74'; c.fill();
+  c.strokeStyle = '#c99a52'; c.lineWidth = 2; c.stroke();
   if (g.chop) {
     drawFood(c, g.chop.item, ch.x + ch.w / 2 - 30, ch.y + 82, 52);
     // pisau
@@ -408,14 +408,14 @@ function drawStations(c, g) {
   }
   // --- Wajan ---
   const fr = L.fry;
-  rr(c, fr.x, fr.y, fr.w, fr.h, 12); c.fillStyle = '#5a5f66'; c.fill();
-  c.strokeStyle = '#3a3d42'; c.lineWidth = 3; c.stroke();
+  rr(c, fr.x, fr.y, fr.w, fr.h, 12); c.fillStyle = '#6b7a8a'; c.fill();
+  c.strokeStyle = '#4a5560'; c.lineWidth = 3; c.stroke();
   text(c, 'WAJAN', fr.x + fr.w / 2, fr.y + 18, 14, '#ffd76a');
-  text(c, 'Ayam • Kentang • Telur', fr.x + fr.w / 2, fr.y + 36, 11, '#d8dce2', 'center', false);
+  text(c, 'Ayam • Kentang • Telur', fr.x + fr.w / 2, fr.y + 36, 11, '#eef1f4', 'center', false);
   for (let i = 0; i < 2; i++) {
     const sx = fr.x + 34 + i * 128, sy = fr.y + 52;
-    c.fillStyle = '#2e3134'; circle(c, sx + 42, sy + 34, 42); c.fill();
-    c.strokeStyle = '#8a8f96'; c.lineWidth = 3; c.stroke();
+    c.fillStyle = '#3a3f46'; circle(c, sx + 42, sy + 34, 42); c.fill();
+    c.strokeStyle = '#a8adb4'; c.lineWidth = 3; c.stroke();
     const slot = g.fry[i];
     if (slot) {
       const pct = cookPct(g, slot, 'fry');
@@ -440,18 +440,18 @@ function drawStations(c, g) {
   }
   // --- Panggangan ---
   const gr = L.grill;
-  rr(c, gr.x, gr.y, gr.w, gr.h, 12); c.fillStyle = '#4a2c14'; c.fill();
-  c.strokeStyle = '#2e1a08'; c.lineWidth = 3; c.stroke();
+  rr(c, gr.x, gr.y, gr.w, gr.h, 12); c.fillStyle = '#6b4423'; c.fill();
+  c.strokeStyle = '#4a2c14'; c.lineWidth = 3; c.stroke();
   text(c, 'PANGGANGAN', gr.x + gr.w / 2, gr.y + 18, 14, '#ffd76a');
-  text(c, 'Patty • Ayam', gr.x + gr.w / 2, gr.y + 36, 11, '#d8dce2', 'center', false);
+  text(c, 'Patty • Ayam', gr.x + gr.w / 2, gr.y + 36, 11, '#eef1f4', 'center', false);
   for (let i = 0; i < 2; i++) {
     const sx = gr.x + 34 + i * 128, sy = gr.y + 52;
     // bara
-    c.fillStyle = '#1e1208'; rr(c, sx, sy, 84, 68, 8); c.fill();
-    c.fillStyle = '#e2483d';
+    c.fillStyle = '#2e1c0c'; rr(c, sx, sy, 84, 68, 8); c.fill();
+    c.fillStyle = '#ff5a4d';
     for (let k = 0; k < 4; k++) { circle(c, sx + 12 + k * 20, sy + 56, 6); c.fill(); }
     // jeruji
-    c.strokeStyle = '#8a8f96'; c.lineWidth = 3;
+    c.strokeStyle = '#a8adb4'; c.lineWidth = 3;
     for (let k = 0; k < 4; k++) { c.beginPath(); c.moveTo(sx + 4, sy + 12 + k * 14); c.lineTo(sx + 80, sy + 12 + k * 14); c.stroke(); }
     const slot = g.grill[i];
     if (slot) {
@@ -479,22 +479,22 @@ function drawBoard(c, g) {
   const b = L.board;
   const shake = g.shakeT > 0 ? Math.sin(g.time * 40) * 4 : 0;
   c.save(); c.translate(shake, 0);
-  rr(c, b.x, b.y, b.w, b.h, 12); c.fillStyle = '#8a5a2e'; c.fill();
-  c.strokeStyle = '#5a3418'; c.lineWidth = 3; c.stroke();
+  rr(c, b.x, b.y, b.w, b.h, 12); c.fillStyle = '#a87c3e'; c.fill();
+  c.strokeStyle = '#7a4a22'; c.lineWidth = 3; c.stroke();
   text(c, 'PAPAN RAKITAN', b.x + b.w / 2, b.y + 18, 14, '#ffd76a');
   // papan kayu
-  rr(c, b.x + 16, b.y + 34, b.w - 32, 108, 8); c.fillStyle = '#d8a860'; c.fill();
-  c.strokeStyle = '#a87c3e'; c.lineWidth = 2; c.stroke();
+  rr(c, b.x + 16, b.y + 34, b.w - 32, 108, 8); c.fillStyle = '#e8bc74'; c.fill();
+  c.strokeStyle = '#c99a52'; c.lineWidth = 2; c.stroke();
   // tumpukan layer
   if (g.board.length === 0) {
-    text(c, 'Klik bahan sesuai resep', b.x + b.w / 2, b.y + 88, 13, '#5a3418');
+    text(c, 'Klik bahan sesuai resep', b.x + b.w / 2, b.y + 88, 13, '#6b4423');
   } else {
     const n = g.board.length;
     g.board.forEach((layer, i) => {
       const ly = b.y + 128 - i * 12;
       const lx = b.x + b.w / 2;
       drawFood(c, layer.item, lx, ly, 40, qPct(layer.quality));
-      if (layer.quality === 'burnt') { text(c, '✕ gosong', lx + 60, ly, 11, '#e2483d', 'left'); }
+      if (layer.quality === 'burnt') { text(c, '✕ gosong', lx + 60, ly, 11, '#ff5a4d', 'left'); }
       else if (layer.quality === 'perfect') { text(c, '★', lx + 60, ly, 13, '#ffd76a', 'left'); }
     });
   }
@@ -525,14 +525,14 @@ function drawBoard(c, g) {
 // ---- Piring & sampah ----
 function drawPlates(c, g) {
   const p = L.plates;
-  rr(c, p.x, p.y, p.w, p.h, 12); c.fillStyle = '#5a3418'; c.fill();
-  c.strokeStyle = '#3a2110'; c.lineWidth = 3; c.stroke();
+  rr(c, p.x, p.y, p.w, p.h, 12); c.fillStyle = '#7a4a22'; c.fill();
+  c.strokeStyle = '#54331a'; c.lineWidth = 3; c.stroke();
   text(c, 'PIRING', p.x + p.w / 2, p.y + 18, 14, '#ffd76a');
   for (let i = 0; i < g.plates.length; i++) {
     const x = p.x + 52 + i * 84, y = p.y + 84;
-    c.fillStyle = '#f5f0e6'; circle(c, x, y, 40); c.fill();
+    c.fillStyle = '#fffaf0'; circle(c, x, y, 40); c.fill();
     c.strokeStyle = '#c8bfa8'; c.lineWidth = 2; c.stroke();
-    c.fillStyle = '#e8e0cc'; circle(c, x, y, 26); c.fill();
+    c.fillStyle = '#f2e8d0'; circle(c, x, y, 26); c.fill();
     const dish = g.plates[i];
     if (dish) {
       const recipe = RECIPES[dish.recipeId];
@@ -540,7 +540,7 @@ function drawPlates(c, g) {
       const dp = dish.burnt ? 115 : dish.perfect ? 85 : 60;
       const layers = recipe.layers.slice(-3);
       layers.forEach((layer, k) => drawFood(c, layer.item, x, y - k * 6, 30, dp));
-      if (dish.burnt) text(c, 'gosong', x, y + 52, 11, '#e2483d');
+      if (dish.burnt) text(c, 'gosong', x, y + 52, 11, '#ff5a4d');
       else if (dish.perfect) text(c, '★ perfect', x, y + 52, 11, '#ffd76a');
       else text(c, recipe.name, x, y + 52, 10, '#ffffff', 'center', false);
     }
@@ -548,17 +548,17 @@ function drawPlates(c, g) {
   text(c, 'Klik piring untuk mengambil', p.x + p.w / 2, p.y + 188, 11, '#f7e8c8', 'center', false);
   // tempat sampah
   const t = L.trash;
-  rr(c, t.x, t.y, t.w, t.h, 12); c.fillStyle = '#3a3d42'; c.fill();
-  c.strokeStyle = '#22242a'; c.lineWidth = 3; c.stroke();
-  c.fillStyle = '#5a5f66'; rr(c, t.x + 12, t.y + 24, t.w - 24, 120, 8); c.fill();
+  rr(c, t.x, t.y, t.w, t.h, 12); c.fillStyle = '#4a5560'; c.fill();
+  c.strokeStyle = '#2e3238'; c.lineWidth = 3; c.stroke();
+  c.fillStyle = '#6b7a8a'; rr(c, t.x + 12, t.y + 24, t.w - 24, 120, 8); c.fill();
   // ikon tempat sampah
-  c.fillStyle = '#8a8f96'; rr(c, t.x + t.w / 2 - 22, t.y + 62, 44, 52, 6); c.fill();
-  c.fillStyle = '#6a7076'; rr(c, t.x + t.w / 2 - 26, t.y + 52, 52, 10, 4); c.fill();
-  c.fillStyle = '#3a3d42';
+  c.fillStyle = '#a8adb4'; rr(c, t.x + t.w / 2 - 22, t.y + 62, 44, 52, 6); c.fill();
+  c.fillStyle = '#8a9096'; rr(c, t.x + t.w / 2 - 26, t.y + 52, 52, 10, 4); c.fill();
+  c.fillStyle = '#4a5560';
   [-12, 0, 12].forEach(o => { rr(c, t.x + t.w / 2 + o - 2, t.y + 76, 4, 26, 2); c.fill(); });
   text(c, 'SAMPAH', t.x + t.w / 2, t.y + 18, 12, '#ffffff');
-  text(c, 'Buang bahan', t.x + t.w / 2, t.y + 160, 11, '#d8dce2', 'center', false);
-  text(c, 'gosong di sini', t.x + t.w / 2, t.y + 176, 11, '#d8dce2', 'center', false);
+  text(c, 'Buang bahan', t.x + t.w / 2, t.y + 160, 11, '#eef1f4', 'center', false);
+  text(c, 'gosong di sini', t.x + t.w / 2, t.y + 176, 11, '#eef1f4', 'center', false);
 }
 
 // ---- Tombol SERVE ----
@@ -568,54 +568,54 @@ function drawServe(c, g) {
   const pulse = ready ? 1 + 0.03 * Math.sin(g.time * 6) : 1;
   c.save(); c.translate(s.x + s.w / 2, s.y + s.h / 2); c.scale(pulse, pulse); c.translate(-(s.x + s.w / 2), -(s.y + s.h / 2));
   const grad = c.createLinearGradient(s.x, s.y, s.x, s.y + s.h);
-  if (ready) { grad.addColorStop(0, '#58b368'); grad.addColorStop(1, '#2e7d32'); }
-  else { grad.addColorStop(0, '#6a7076'); grad.addColorStop(1, '#4a4f55'); }
+  if (ready) { grad.addColorStop(0, '#4cc464'); grad.addColorStop(1, '#2e9e32'); }
+  else { grad.addColorStop(0, '#7a828c'); grad.addColorStop(1, '#5a6068'); }
   rr(c, s.x, s.y, s.w, s.h, 16); c.fillStyle = grad; c.fill();
-  c.strokeStyle = ready ? '#ffd76a' : '#8a8f96'; c.lineWidth = 3; c.stroke();
+  c.strokeStyle = ready ? '#ffd76a' : '#a8adb4'; c.lineWidth = 3; c.stroke();
   // lonceng
   c.fillStyle = '#ffd76a'; c.beginPath(); c.arc(s.x + 52, s.y + 40, 16, Math.PI, 0); c.fill();
   rr(c, s.x + 34, s.y + 40, 36, 6, 3); c.fill();
   circle(c, s.x + 52, s.y + 52, 4); c.fill();
   text(c, 'SERVE', s.x + s.w / 2 + 20, s.y + 42, 34, '#ffffff');
   c.restore();
-  text(c, 'Sajikan hidangan yang cocok dengan pesanan', s.x + s.w / 2, s.y + s.h + 16, 12, '#c9a06a', 'center', false);
+  text(c, 'Sajikan hidangan yang cocok dengan pesanan', s.x + s.w / 2, s.y + s.h + 16, 12, '#e0b878', 'center', false);
 }
 
 // ---- Order board (kanan) ----
 function drawOrderBoard(c, g) {
-  c.fillStyle = '#3a2110'; c.fillRect(L.railR.x, L.railR.y, L.railR.w, L.railR.h);
-  c.fillStyle = '#5a3418'; c.fillRect(L.railR.x, L.railR.y, L.railR.w, 34);
+  c.fillStyle = '#54331a'; c.fillRect(L.railR.x, L.railR.y, L.railR.w, L.railR.h);
+  c.fillStyle = '#7a4a22'; c.fillRect(L.railR.x, L.railR.y, L.railR.w, 34);
   text(c, 'ORDER BOARD', L.railR.x + 132, L.railR.y + 18, 15, '#ffd76a');
   for (let i = 0; i < 3; i++) {
     const y = L.railR.y + 44 + i * 210;
     const o = g.orders[i];
     rr(c, L.railR.x + 10, y, 244, 196, 12);
-    c.fillStyle = o ? '#f7e8c8' : '#4a2c14'; c.fill();
+    c.fillStyle = o ? '#fff3d0' : '#6b4423'; c.fill();
     if (o) {
       const selected = g.targetOrderId === o.id;
-      c.strokeStyle = selected ? '#ffd76a' : '#8a5a2e'; c.lineWidth = selected ? 4 : 2; c.stroke();
+      c.strokeStyle = selected ? '#ffd76a' : '#b98d4f'; c.lineWidth = selected ? 4 : 2; c.stroke();
       const recipe = RECIPES[o.recipeId];
       const frac = Math.max(0, o.patience / o.maxPatience);
-      text(c, 'PESANAN #' + String(o.id).padStart(2, '0'), L.railR.x + 132, y + 18, 13, '#8a5a2e');
+      text(c, 'PESANAN #' + String(o.id).padStart(2, '0'), L.railR.x + 132, y + 18, 13, '#6b4423');
       // ikon hidangan: tumpukan mini 3 lapis (bukan 1 bahan saja)
       const iconLayers = [recipe.layers[0], recipe.layers[Math.floor(recipe.layers.length / 2)], recipe.layers[recipe.layers.length - 1]];
       iconLayers.forEach((layer, k) => drawFood(c, layer.item, L.railR.x + 40, y + 62 - k * 8, 34, 85));
-      text(c, recipe.name, L.railR.x + 132, y + 52, 15, '#3a2110', 'left');
-      text(c, 'Hadiah: ' + o.reward + ' koin', L.railR.x + 132, y + 74, 12, '#8a5a2e', 'left', false);
+      text(c, recipe.name, L.railR.x + 132, y + 52, 15, '#2e1a10', 'left');
+      text(c, 'Hadiah: ' + o.reward + ' koin', L.railR.x + 132, y + 74, 12, '#6b4423', 'left', false);
       // daftar bahan
       recipe.layers.forEach((layer, k) => {
         const x = L.railR.x + 22 + k * 30 + 15, yy = y + 106;
         drawFood(c, layer.item, x, yy, 26);
       });
       // bar kesabaran
-      rr(c, L.railR.x + 26, y + 140, 212, 12, 6); c.fillStyle = '#221610'; c.fill();
-      c.fillStyle = frac > 0.5 ? '#58b368' : frac > 0.25 ? '#f7c948' : '#e2483d';
+      rr(c, L.railR.x + 26, y + 140, 212, 12, 6); c.fillStyle = '#2e1a10'; c.fill();
+      c.fillStyle = frac > 0.5 ? '#4cc464' : frac > 0.25 ? '#ffc21a' : '#ff5a4d';
       rr(c, L.railR.x + 26, y + 140, 212 * frac, 12, 6); c.fill();
-      text(c, 'Kesabaran ' + Math.ceil(frac * 100) + '%', L.railR.x + 132, y + 162, 11, '#5a3418', 'center', false);
-      if (selected) { text(c, '● DIRAKIT', L.railR.x + 132, y + 180, 11, '#2e7d32'); }
+      text(c, 'Kesabaran ' + Math.ceil(frac * 100) + '%', L.railR.x + 132, y + 162, 11, '#6b4423', 'center', false);
+      if (selected) { text(c, '● DIRAKIT', L.railR.x + 132, y + 180, 11, '#2e9e32'); }
     } else {
-      c.strokeStyle = '#8a5a2e'; c.lineWidth = 2; c.stroke();
-      text(c, '— menunggu —', L.railR.x + 132, y + 98, 14, '#a08060', 'center', false);
+      c.strokeStyle = '#b98d4f'; c.lineWidth = 2; c.stroke();
+      text(c, '— menunggu —', L.railR.x + 132, y + 98, 14, '#c9a06a', 'center', false);
     }
   }
 }
@@ -625,7 +625,7 @@ function overlay(c, alpha) { c.fillStyle = 'rgba(20,12,6,' + alpha + ')'; c.fill
 function drawMenu(c, g) {
   overlay(c, 0.55);
   // papan judul kayu
-  rr(c, 340, 130, 600, 150, 18); c.fillStyle = '#5a3418'; c.fill();
+  rr(c, 340, 130, 600, 150, 18); c.fillStyle = '#7a4a22'; c.fill();
   c.strokeStyle = '#ffd76a'; c.lineWidth = 4; c.stroke();
   c.fillStyle = '#ffffff'; c.beginPath(); c.arc(400, 166, 20, Math.PI, 0); c.fill();
   circle(c, 382, 162, 10); c.fill(); circle(c, 418, 162, 10); c.fill();
@@ -633,11 +633,11 @@ function drawMenu(c, g) {
   text(c, "CHEF'S RUSH", 640, 190, 52, '#ffd76a');
   text(c, 'KITCHEN MASTER', 640, 240, 24, '#f7e8c8');
   text(c, 'Terima pesanan • Potong • Goreng • Panggang • Rakit • Sajikan!', 640, 320, 18, '#ffffff', 'center', false);
-  text(c, 'Klik MAIN untuk mulai. P = jeda, M = suara.', 640, 348, 15, '#c9a06a', 'center', false);
+  text(c, 'Klik MAIN untuk mulai. P = jeda, M = suara.', 640, 348, 15, '#e0b878', 'center', false);
   // tombol main
-  pill(c, 490, 400, 300, 70, '#58b368', '#ffd76a');
+  pill(c, 490, 400, 300, 70, '#4cc464', '#ffd76a');
   text(c, '▶  MAIN', 640, 436, 30, '#ffffff');
-  pill(c, 490, 490, 300, 56, '#3a2110', '#ffffff');
+  pill(c, 490, 490, 300, 56, '#54331a', '#ffffff');
   text(c, 'PILIH LEVEL', 640, 519, 20, '#ffffff');
   text(c, 'Koin: ' + g.save.coins + '   •   Level terbuka: ' + g.save.unlocked + '/10', 640, 590, 15, '#ffd76a', 'center', false);
 }
@@ -648,44 +648,44 @@ function drawSelect(c, g) {
     const col = i % 5, row = Math.floor(i / 5);
     const x = 190 + col * 190, y = 140 + row * 200;
     const locked = lv.n > g.save.unlocked;
-    rr(c, x, y, 170, 180, 14); c.fillStyle = locked ? '#3a3d42' : '#5a3418'; c.fill();
-    c.strokeStyle = locked ? '#6a7076' : '#ffd76a'; c.lineWidth = 3; c.stroke();
+    rr(c, x, y, 170, 180, 14); c.fillStyle = locked ? '#4a5560' : '#7a4a22'; c.fill();
+    c.strokeStyle = locked ? '#a8adb4' : '#ffd76a'; c.lineWidth = 3; c.stroke();
     if (locked) {
-      text(c, '🔒', x + 85, y + 70, 40, '#9aa0a8');
-      text(c, 'LEVEL ' + lv.n, x + 85, y + 120, 16, '#9aa0a8');
+      text(c, '🔒', x + 85, y + 70, 40, '#b8bec4');
+      text(c, 'LEVEL ' + lv.n, x + 85, y + 120, 16, '#b8bec4');
     } else {
       text(c, 'LEVEL ' + lv.n, x + 85, y + 34, 17, '#ffd76a');
       text(c, lv.name, x + 85, y + 62, 13, '#ffffff', 'center', false);
       text(c, 'Target: ' + lv.target, x + 85, y + 92, 12, '#f7e8c8', 'center', false);
       text(c, 'Waktu: ' + Math.floor(lv.shift / 60) + ':' + String(lv.shift % 60).padStart(2, '0'), x + 85, y + 114, 12, '#f7e8c8', 'center', false);
       const st = g.save.stars[lv.n] || 0;
-      for (let k = 0; k < 3; k++) drawStar(c, x + 55 + k * 30, y + 148, 11, k < st ? '#ffd76a' : '#5a4a38');
+      for (let k = 0; k < 3; k++) drawStar(c, x + 55 + k * 30, y + 148, 11, k < st ? '#ffd76a' : '#7a6a50');
     }
   });
-  pill(c, 490, 600, 300, 56, '#3a2110', '#ffffff');
+  pill(c, 490, 600, 300, 56, '#54331a', '#ffffff');
   text(c, '← KEMBALI', 640, 629, 18, '#ffffff');
 }
 function drawPaused(c, g) {
   overlay(c, 0.6);
   text(c, 'JEDA', 640, 300, 48, '#ffd76a');
   text(c, 'Tekan P atau klik untuk lanjut', 640, 360, 18, '#ffffff', 'center', false);
-  pill(c, 490, 400, 300, 60, '#58b368', '#ffd76a');
+  pill(c, 490, 400, 300, 60, '#4cc464', '#ffd76a');
   text(c, '▶  LANJUT', 640, 431, 24, '#ffffff');
 }
 function drawEnd(c, g, win) {
   overlay(c, 0.62);
-  text(c, win ? 'LEVEL SELESAI!' : 'WAKTU HABIS', 640, 130, 44, win ? '#ffd76a' : '#e2483d');
+  text(c, win ? 'LEVEL SELESAI!' : 'WAKTU HABIS', 640, 130, 44, win ? '#ffd76a' : '#ff5a4d');
   for (let i = 0; i < 3; i++) {
-    drawStar(c, 550 + i * 90, 210, 34, i < g.stars ? '#ffd76a' : '#5a4a38');
+    drawStar(c, 550 + i * 90, 210, 34, i < g.stars ? '#ffd76a' : '#7a6a50');
   }
   text(c, 'Skor: ' + g.score + '  (target ' + g.level.target + ')', 640, 280, 20, '#ffffff');
   text(c, 'Koin didapat: +' + g.coinsEarned + '   •   Total koin: ' + g.save.coins, 640, 312, 16, '#ffd76a', 'center', false);
   if (win) {
     text(c, 'TOKO UPGRADE — klik untuk membeli', 640, 360, 16, '#ffffff');
   }
-  pill(c, 340, 600, 220, 56, '#58b368', '#ffd76a');
+  pill(c, 340, 600, 220, 56, '#4cc464', '#ffd76a');
   text(c, win ? 'LEVEL BERIKUTNYA ▶' : 'COBA LAGI', 450, 629, 18, '#ffffff');
-  pill(c, 720, 600, 220, 56, '#3a2110', '#ffffff');
+  pill(c, 720, 600, 220, 56, '#54331a', '#ffffff');
   text(c, 'MENU', 830, 629, 18, '#ffffff');
 }
 function drawShop(c, g) {
@@ -696,12 +696,12 @@ function drawShop(c, g) {
     const cost = up.base * (lvl + 1);
     const maxed = lvl >= UPGRADE_MAX;
     const afford = !maxed && g.save.coins >= cost;
-    rr(c, x, y, 200, 130, 12); c.fillStyle = '#5a3418'; c.fill();
-    c.strokeStyle = afford ? '#ffd76a' : '#8a5a2e'; c.lineWidth = 2; c.stroke();
+    rr(c, x, y, 200, 130, 12); c.fillStyle = '#7a4a22'; c.fill();
+    c.strokeStyle = afford ? '#ffd76a' : '#b98d4f'; c.lineWidth = 2; c.stroke();
     text(c, up.name, x + 100, y + 26, 15, '#ffffff');
     text(c, up.desc, x + 100, y + 52, 11, '#f7e8c8', 'center', false);
     text(c, 'Lv ' + lvl + '/' + UPGRADE_MAX, x + 100, y + 76, 12, '#ffd76a');
-    text(c, maxed ? 'MAKS' : 'Beli: ' + cost + ' koin', x + 100, y + 104, 13, afford ? '#58b368' : '#e2483d');
+    text(c, maxed ? 'MAKS' : 'Beli: ' + cost + ' koin', x + 100, y + 104, 13, afford ? '#4cc464' : '#ff5a4d');
   });
 }
 
@@ -721,7 +721,7 @@ function drawHeld(c, g, mx, my) {
     const label = INGREDIENTS[g.held.item].name + (g.held.process !== 'raw' ? ' (' + g.held.process + ')' : '');
     pill(c, mx - 52, my + 26, 104, 20, 'rgba(20,12,6,0.85)');
     text(c, label, mx, my + 37, 10, '#ffffff');
-    if (g.held.quality === 'burnt') text(c, 'GOSONG', mx, my - 30, 11, '#e2483d');
+    if (g.held.quality === 'burnt') text(c, 'GOSONG', mx, my - 30, 11, '#ff5a4d');
     else if (g.held.quality === 'perfect') text(c, '★ PERFECT', mx, my - 30, 11, '#ffd76a');
   }
   c.restore();
