@@ -338,7 +338,9 @@ function drawBackground(c, g) {
   c.fillStyle = '#a87c3e'; c.fillRect(196, 656, 820, 2);
   // dekorasi meja: burger di kiri, botol saus + tanaman di kanan
   drawBurgerDeco(c, 268, 690, 52);
-  drawLeaf(c, 330, 700, 14, -0.6); drawLeaf(c, 344, 706, 11, 0.7);
+  // tomat + selada di celah meja (seperti referensi)
+  drawFood(c, 'tomato', 336, 700, 28);
+  drawFood(c, 'lettuce', 362, 706, 24);
   drawPlant(c, 922, 700, 26);
   drawSauceBottle(c, 956, 694, 30, '#e2483d', '#c92a20');
   drawSauceBottle(c, 988, 696, 26, '#ffc21a', '#e8a91e');
@@ -400,6 +402,9 @@ function drawTopBar(c, g) {
   pill(c, L.pauseBtn.x, L.pauseBtn.y, L.pauseBtn.w, L.pauseBtn.h, '#3a2412', '#ffd76a');
   c.fillStyle = 'rgba(255,255,255,0.25)'; rr(c, L.pauseBtn.x + 4, L.pauseBtn.y + 3, L.pauseBtn.w - 8, 8, 4); c.fill();
   text(c, g.screen === 'paused' ? '▶' : '❚❚', L.pauseBtn.x + 18, L.pauseBtn.y + 21, 15, '#ffffff');
+  // daun di pojok bar atas (seperti referensi)
+  drawLeaf(c, 10, 8, 10, -0.7); drawLeaf(c, 22, 4, 7, -0.2);
+  drawLeaf(c, 1270, 8, 10, 0.7); drawLeaf(c, 1258, 4, 7, 0.2);
 }
 function drawStar(c, x, y, r, color) {
   c.fillStyle = color; c.beginPath();
@@ -421,6 +426,8 @@ function drawLeftRail(c, g) {
     const y = L.railL.y + 44 + i * 210;
     rr(c, 10, y, 176, 196, 12); c.fillStyle = i % 2 ? '#6b4423' : '#7a4e28'; c.fill();
     c.strokeStyle = '#b98d4f'; c.lineWidth = 2; c.stroke();
+    // kilau atas kartu
+    c.fillStyle = 'rgba(255,255,255,0.18)'; rr(c, 14, y + 4, 168, 10, 5); c.fill();
     const o = g.orders[i];
     if (!o) {
       text(c, '— kosong —', 98, y + 98, 14, '#c9a06a', 'center', false);
@@ -429,10 +436,14 @@ function drawLeftRail(c, g) {
     const cust = CUSTOMERS[o.cust];
     const frac = Math.max(0, o.patience / o.maxPatience);
     const bob = o.animT > 0 ? Math.sin(o.animT * 14) * 4 : 0;
-    drawFace(c, o.cust, 98, y + 62 + bob, 42, o.mood);
-    if (o.mood === 'angry') {
-      // tanda seru merah muda saat pelanggan marah
-      text(c, '!!', 152, y + 26, 20, '#ff7a9e');
+    // wajah lebih besar (seperti referensi) — dipotong di tepi kartu
+    c.save();
+    rr(c, 10, y, 176, 196, 12); c.clip();
+    drawFace(c, o.cust, 98, y + 58 + bob, 48, o.mood);
+    c.restore();
+    if (frac < 0.85) {
+      // tanda seru merah muda saat pelanggan menunggu (kesabaran < 85%)
+      text(c, '!!', 156, y + 24, 20, '#ff7a9e');
     }
     // pil nama hijau (seperti referensi)
     pill(c, 48, y + 112, 100, 28, '#4cc464', '#2e9e32');
@@ -461,10 +472,10 @@ function drawBins(c, g) {
     // kilau atas nampan
     c.fillStyle = 'rgba(255,255,255,0.6)'; rr(c, b.x + 4, b.y + 3, b.w - 8, 7, 3); c.fill();
     if (empty) { c.fillStyle = 'rgba(40,30,20,0.3)'; rr(c, b.x, b.y, b.w, b.h, 8); c.fill(); }
-    drawFood(c, b.id, b.x + b.w / 2, b.y + 32, 44);
-    // label + stok
-    pill(c, b.x + 4, b.y + b.h - 21, b.w - 8, 17, 'rgba(30,18,8,0.85)');
-    text(c, ing.name.toUpperCase(), b.x + b.w / 2, b.y + b.h - 12, 10, '#ffffff');
+    drawFood(c, b.id, b.x + b.w / 2, b.y + 30, 44);
+    // label gelap selebar nampan (seperti referensi)
+    pill(c, b.x, b.y + b.h - 18, b.w, 18, 'rgba(30,18,8,0.9)');
+    text(c, ing.name.toUpperCase(), b.x + b.w / 2, b.y + b.h - 9, 10, '#ffffff');
     if (stock < ing.maxStock) {
       pill(c, b.x + b.w - 20, b.y + 2, 18, 16, '#a02828');
       text(c, String(stock), b.x + b.w - 11, b.y + 11, 11, '#ffffff');
@@ -544,6 +555,9 @@ function drawStations(c, g) {
     c.strokeStyle = '#c8ccd2'; c.lineWidth = 3; c.stroke();
     c.strokeStyle = 'rgba(90,200,255,0.9)'; c.lineWidth = 2;
     circle(c, sx + 42, sy + 34, 40); c.stroke();
+    // titik api oranye di tepi bawah panci (burner)
+    c.fillStyle = '#ff8a2e'; circle(c, sx + 42, sy + 76, 5); c.fill();
+    c.fillStyle = '#ffd76a'; circle(c, sx + 42, sy + 76, 2.5); c.fill();
     const slot = g.fry[i];
     if (slot) {
       const pct = cookPct(g, slot, 'fry');
@@ -615,6 +629,9 @@ function drawBoard(c, g) {
   rr(c, b.x + 16, b.y + 34, b.w - 32, 108, 8); c.fillStyle = '#e8bc74'; c.fill();
   c.strokeStyle = '#c99a52'; c.lineWidth = 2; c.stroke();
   c.fillStyle = 'rgba(255,255,255,0.3)'; rr(c, b.x + 22, b.y + 38, b.w - 44, 8, 4); c.fill();
+  // kilau di sudut bawah papan (seperti referensi)
+  sparkle(c, b.x + 26, b.y + 134, 8, g.time);
+  sparkle(c, b.x + b.w - 26, b.y + 134, 8, g.time + 1);
   // tumpukan layer
   if (g.board.length === 0) {
     text(c, 'Klik bahan sesuai resep', b.x + b.w / 2, b.y + 88, 13, '#6b4423');
@@ -669,10 +686,17 @@ function drawPlates(c, g) {
     const dish = g.plates[i];
     if (dish) {
       const recipe = RECIPES[dish.recipeId];
-      // gambar mini hidangan: tumpuk 3 layer teratas
+      // burger utuh: semua layer ditumpuk, roti bawah datar
       const dp = dish.burnt ? 115 : dish.perfect ? 85 : 60;
-      const layers = recipe.layers.slice(-3);
-      layers.forEach((layer, k) => drawFood(c, layer.item, x, y - k * 6, 30, dp));
+      const layers = recipe.layers, n = layers.length;
+      layers.forEach((layer, k) => {
+        const ly = y - k * 5 + (n - 1) * 2.5;
+        if (k === 0 && layer.item === 'bun') {
+          c.fillStyle = '#e8a33c'; rr(c, x - 15, ly - 4, 30, 9, 4); c.fill();
+        } else {
+          drawFood(c, layer.item, x, ly, 28, dp);
+        }
+      });
       if (dish.burnt) text(c, 'gosong', x, y + 52, 11, '#ff5a4d');
       else if (dish.perfect) text(c, '★ perfect', x, y + 52, 11, '#ffd76a');
       else text(c, recipe.name, x, y + 52, 10, '#ffffff', 'center', false);
@@ -741,6 +765,9 @@ function drawOrderBoard(c, g) {
     if (o) {
       const selected = g.targetOrderId === o.id;
       c.strokeStyle = selected ? '#ffd76a' : '#b98d4f'; c.lineWidth = selected ? 4 : 2; c.stroke();
+      // kilau emas di sudut atas tiket (seperti referensi)
+      sparkle(c, L.railR.x + 18, y + 10, 8, g.time);
+      sparkle(c, L.railR.x + 246, y + 10, 8, g.time + 1);
       const recipe = RECIPES[o.recipeId];
       const frac = Math.max(0, o.patience / o.maxPatience);
       text(c, 'PESANAN #' + String(o.id).padStart(2, '0'), L.railR.x + 132, y + 18, 13, '#6b4423');
