@@ -911,11 +911,124 @@ function drawMenuBoard(c, x, y, w, h) {
   c.beginPath(); c.moveTo(x + 16, y + h - 36); c.lineTo(x + w - 16, y + h - 36); c.stroke();
   text(c, 'Dibuat segar • Disajikan panas!', x + w / 2, y + h - 18, 12, '#f7e8c8', 'center', false);
 }
+// latar depan toko: langit, dinding warung, trotoar + jendela etalase
+function drawMenuBackdrop(c) {
+  // langit hangat (terlihat di bawah bar atas)
+  const sky = c.createLinearGradient(0, 0, 0, 140);
+  sky.addColorStop(0, '#bfe3f0'); sky.addColorStop(1, '#ffeec2');
+  c.fillStyle = sky; c.fillRect(0, 0, W, 140);
+  // matahari + awan
+  c.fillStyle = '#FFD84A'; circle(c, 1180, 82, 20); c.fill();
+  c.fillStyle = 'rgba(255,255,255,0.85)';
+  c.beginPath(); c.ellipse(150, 82, 45, 14, 0, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.ellipse(190, 74, 32, 12, 0, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.ellipse(1080, 88, 40, 12, 0, 0, Math.PI * 2); c.fill();
+  // dinding warung (kayu krem)
+  c.fillStyle = '#e8c88f'; c.fillRect(0, 140, W, 470);
+  // garis papan kayu horizontal
+  c.fillStyle = 'rgba(120,70,20,0.18)';
+  for (let y = 200; y < 610; y += 60) c.fillRect(0, y, W, 3);
+  // trotoar
+  c.fillStyle = '#d9b98a'; c.fillRect(0, 610, W, 110);
+  c.fillStyle = 'rgba(120,70,20,0.25)';
+  for (let x = 0; x < W; x += 90) c.fillRect(x, 610, 3, 110);
+  c.fillRect(0, 610, W, 4);
+  // jendela etalase kiri + kanan (bingkai kayu + kaca)
+  [40, 960].forEach((wx) => {
+    rr(c, wx, 300, 280, 180, 10); c.fillStyle = '#653719'; c.fill();
+    rr(c, wx + 8, 308, 264, 164, 6); c.fillStyle = '#bfe3f0'; c.fill();
+    // kilau kaca
+    c.fillStyle = 'rgba(255,255,255,0.35)';
+    c.beginPath(); c.moveTo(wx + 30, 308); c.lineTo(wx + 90, 308); c.lineTo(wx + 40, 472); c.lineTo(wx + 14, 472); c.closePath(); c.fill();
+  });
+}
+// poster makanan di etalase (ikon + 2 baris label)
+function drawFoodPoster(c, x, y, w, h, kind, line1, line2, bg) {
+  rr(c, x, y, w, h, 8); c.fillStyle = bg; c.fill();
+  c.strokeStyle = '#653719'; c.lineWidth = 3; c.stroke();
+  if (kind === 'burger') drawBurgerDeco(c, x + w / 2, y + h * 0.38, w * 0.6);
+  else if (kind === 'fries') drawFries(c, x + w / 2, y + h * 0.38, w * 0.48);
+  else if (kind === 'drink') drawDrink(c, x + w / 2, y + h * 0.38, w * 0.48);
+  text(c, line1, x + w / 2, y + h - 30, 13, '#653719');
+  text(c, line2, x + w / 2, y + h - 12, 13, '#653719');
+}
+// pengunjung kecil yang mengantri (badan utuh, goyang pelan)
+function drawQueuePerson(c, x, y, s, o, t) {
+  const bob = Math.sin(t * 1.6 + x * 0.05) * 2;
+  c.save(); c.translate(x, y + bob);
+  // kaki
+  c.fillStyle = '#3a2a1a';
+  rr(c, -s * 0.15, -s * 0.3, s * 0.12, s * 0.3, s * 0.04); c.fill();
+  rr(c, s * 0.03, -s * 0.3, s * 0.12, s * 0.3, s * 0.04); c.fill();
+  // badan (baju)
+  c.fillStyle = o.shirt;
+  rr(c, -s * 0.24, -s * 0.66, s * 0.48, s * 0.4, s * 0.09); c.fill();
+  // kerah baju
+  c.fillStyle = 'rgba(255,255,255,0.35)';
+  rr(c, -s * 0.1, -s * 0.66, s * 0.2, s * 0.06, s * 0.03); c.fill();
+  // lengan
+  c.fillStyle = o.shirt;
+  rr(c, -s * 0.32, -s * 0.62, s * 0.1, s * 0.32, s * 0.05); c.fill();
+  rr(c, s * 0.22, -s * 0.62, s * 0.1, s * 0.32, s * 0.05); c.fill();
+  // kepala (lebih besar)
+  c.fillStyle = o.skin || '#f2c89b';
+  circle(c, 0, -s * 0.82, s * 0.2); c.fill();
+  // rambut
+  c.fillStyle = o.hair;
+  if (o.hairStyle === 'cap') {
+    c.beginPath(); c.arc(0, -s * 0.84, s * 0.21, Math.PI, 0); c.fill();
+    rr(c, -s * 0.02, -s * 1.0, s * 0.34, s * 0.07, s * 0.03); c.fill();
+  } else if (o.hairStyle === 'long') {
+    c.beginPath(); c.arc(0, -s * 0.84, s * 0.21, Math.PI, 0); c.fill();
+    rr(c, -s * 0.22, -s * 0.88, s * 0.11, s * 0.34, s * 0.05); c.fill();
+    rr(c, s * 0.11, -s * 0.88, s * 0.11, s * 0.34, s * 0.05); c.fill();
+  } else if (o.hairStyle === 'bun') {
+    c.beginPath(); c.arc(0, -s * 0.84, s * 0.21, Math.PI, 0); c.fill();
+    circle(c, 0, -s * 1.04, s * 0.08); c.fill();
+  } else {
+    c.beginPath(); c.arc(0, -s * 0.84, s * 0.21, Math.PI, 0); c.fill();
+  }
+  // wajah (mata + senyum lebih jelas)
+  c.fillStyle = '#2e1a10';
+  circle(c, -s * 0.07, -s * 0.82, s * 0.032); c.fill();
+  circle(c, s * 0.07, -s * 0.82, s * 0.032); c.fill();
+  c.strokeStyle = '#2e1a10'; c.lineWidth = 2;
+  c.beginPath(); c.arc(0, -s * 0.78, s * 0.08, 0.15 * Math.PI, 0.85 * Math.PI); c.stroke();
+  c.restore();
+}
+// papan harga berdiri di depan toko (kanan)
+function drawPriceSign(c, x, y, w, h) {
+  // papan tulis
+  rr(c, x, y, w, h, 10); c.fillStyle = '#A85F2B'; c.fill();
+  rr(c, x + 6, y + 6, w - 12, h - 12, 7); c.fillStyle = '#2e1a10'; c.fill();
+  text(c, '★ HARGA HARI INI ★', x + w / 2, y + 26, 14, '#FFD84A');
+  c.strokeStyle = 'rgba(255,216,74,0.4)'; c.lineWidth = 1.5;
+  c.beginPath(); c.moveTo(x + 14, y + 44); c.lineTo(x + w - 14, y + 44); c.stroke();
+  const items = [
+    ['Classic Burger', '35'],
+    ['Chicken Burger', '45'],
+    ['Double Beef', '60'],
+  ];
+  items.forEach((it, i) => {
+    const iy = y + 68 + i * 36;
+    text(c, it[0], x + 16, iy, 13, '#fff3d0', 'left', false);
+    text(c, it[1] + ' koin', x + w - 16, iy, 13, '#FFD84A', 'right');
+  });
+  c.strokeStyle = 'rgba(255,216,74,0.4)'; c.lineWidth = 1.5;
+  c.beginPath(); c.moveTo(x + 14, y + h - 24); c.lineTo(x + w - 14, y + h - 24); c.stroke();
+  text(c, 'Dibuat segar • Disajikan panas!', x + w / 2, y + h - 12, 11, '#f7e8c8', 'center', false);
+  // kaki kayu di bawah papan
+  c.fillStyle = '#653719';
+  rr(c, x + 14, y + h - 4, 10, 18, 3); c.fill();
+  rr(c, x + w - 24, y + h - 4, 10, 18, 3); c.fill();
+}
 function drawMenu(c, g) {
-  overlay(c, 0.55);
+  // latar depan toko (menggantikan dapur di layar menu)
+  drawMenuBackdrop(c);
+  overlay(c, 0.15);
   // awning garis-garis di atas papan judul (khas warung burger)
   drawSignAwning(c, 340, 104, 600);
-  // papan judul kayu mengilap (di bawah awning)
+  // papan nama toko (papan judul kayu mengilap)
   glossPanel(c, 340, 130, 600, 150, 18, '#A85F2B', '#653719', '#FFD84A');
   drawLeaf(c, 360, 150, 16, -0.7); drawLeaf(c, 372, 142, 12, -0.2);
   drawLeaf(c, 920, 150, 16, 0.7); drawLeaf(c, 908, 142, 12, 0.2);
@@ -924,14 +1037,22 @@ function drawMenu(c, g) {
   rr(c, 370, 168, 60, 13, 5); c.fill();
   text(c, "CHEF'S RUSH", 640, 190, 52, '#FFD84A');
   text(c, 'KITCHEN MASTER', 640, 240, 24, '#f7e8c8');
-  text(c, 'Terima pesanan • Potong • Goreng • Panggang • Rakit • Sajikan!', 640, 320, 18, '#ffffff', 'center', false);
-  text(c, 'Klik MAIN untuk mulai. P = jeda, M = suara.', 640, 348, 15, '#f2c078', 'center', false);
-  // burger pahlawan + kentang + minuman (kiri — paket penjual burger)
-  drawHeroBurger(c, 170, 450, 118, g.time);
-  drawFries(c, 300, 530, 52);
-  drawDrink(c, 362, 525, 54);
-  // papan menu harga (kanan — daftar burger yang dijual)
-  drawMenuBoard(c, 990, 150, 250, 230);
+  text(c, 'Terima pesanan • Potong • Goreng • Panggang • Rakit • Sajikan!', 640, 320, 18, '#2e1a10', 'center', false);
+  text(c, 'Klik MAIN untuk mulai. P = jeda, M = suara.', 640, 348, 15, '#653719', 'center', false);
+  // poster makanan di etalase kiri + kanan
+  drawFoodPoster(c, 55, 315, 120, 150, 'burger', 'CLASSIC', 'BURGER!', '#ffe9b0');
+  drawFoodPoster(c, 185, 315, 120, 150, 'fries', 'CRISPY', 'FRIES!', '#fff3d0');
+  drawFoodPoster(c, 975, 315, 120, 150, 'drink', 'LEMONADE', '& COLA!', '#bfe3f0');
+  drawFoodPoster(c, 1105, 315, 120, 150, 'burger', 'DOUBLE', 'BEEF!', '#ffe9b0');
+  // antrean pengunjung di depan toko (kiri + kanan, posisi/ukuran bervariasi)
+  drawQueuePerson(c, 70, 688, 105, { shirt: '#3f9e4d', hair: '#1a1a1a', hairStyle: 'short' }, g.time);
+  drawQueuePerson(c, 150, 694, 100, { shirt: '#e2483d', hair: '#5a3a1a', hairStyle: 'long' }, g.time);
+  drawQueuePerson(c, 230, 688, 108, { shirt: '#527DAA', hair: '#1a1a1a', hairStyle: 'cap' }, g.time);
+  drawQueuePerson(c, 310, 694, 102, { shirt: '#FFB43B', hair: '#8a8a8a', hairStyle: 'bun' }, g.time);
+  drawQueuePerson(c, 900, 690, 104, { shirt: '#7a5ac8', hair: '#2e1a10', hairStyle: 'long' }, g.time);
+  drawQueuePerson(c, 965, 694, 100, { shirt: '#36C957', hair: '#1a1a1a', hairStyle: 'short' }, g.time);
+  // papan harga berdiri di depan toko (kanan)
+  drawPriceSign(c, 1010, 470, 230, 180);
   // tombol main mengilap
   c.fillStyle = 'rgba(20,10,4,0.35)'; rr(c, 493, 405, 300, 70, 35); c.fill();
   const mg = c.createLinearGradient(0, 400, 0, 470);
@@ -943,12 +1064,7 @@ function drawMenu(c, g) {
   pill(c, 490, 490, 300, 56, '#653719', '#FFD84A');
   c.fillStyle = 'rgba(255,255,255,0.2)'; rr(c, 498, 494, 284, 10, 5); c.fill();
   text(c, 'PILIH LEVEL', 640, 519, 20, '#ffffff');
-  text(c, 'Koin: ' + g.save.coins + '   •   Level terbuka: ' + g.save.unlocked + '/10', 640, 590, 15, '#FFD84A', 'center', false);
-  // dekorasi meja di bawah menu
-  drawBurgerDeco(c, 250, 668, 54);
-  drawPlant(c, 1010, 676, 28);
-  drawSauceBottle(c, 1046, 670, 32, '#e2483d', '#c92a20');
-  drawSauceBottle(c, 1080, 672, 28, '#FFB43B', '#e8912a');
+  text(c, 'Koin: ' + g.save.coins + '   •   Level terbuka: ' + g.save.unlocked + '/10', 640, 590, 15, '#653719', 'center', false);
 }
 function drawSelect(c, g) {
   overlay(c, 0.55);
