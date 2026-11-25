@@ -154,9 +154,9 @@ function drawTopBar(c, g) {
   grad.addColorStop(0, '#5a3418'); grad.addColorStop(1, '#3a2110');
   c.fillStyle = grad; c.fillRect(b.x, b.y, b.w, b.h);
   // logo
-  c.fillStyle = '#ffffff'; c.beginPath(); c.arc(36, 26, 15, Math.PI, 0); c.fill();
-  circle(c, 22, 24, 8); c.fill(); circle(c, 50, 24, 8); c.fill();
-  c.fillStyle = '#ffffff'; rr(c, 20, 26, 32, 8, 3); c.fill();
+  c.fillStyle = '#ffffff'; c.beginPath(); c.arc(36, 24, 12, Math.PI, 0); c.fill();
+  circle(c, 26, 22, 6); c.fill(); circle(c, 46, 22, 6); c.fill();
+  c.fillStyle = '#ffffff'; rr(c, 19, 26, 34, 9, 3); c.fill();
   text(c, "CHEF'S RUSH", 62, 24, 22, '#ffd76a', 'left');
   text(c, 'KITCHEN MASTER', 62, 44, 10, '#f7e8c8', 'left');
   if (g.level) {
@@ -188,7 +188,7 @@ function drawTopBar(c, g) {
   }
   // tombol mute & pause
   pill(c, L.muteBtn.x, L.muteBtn.y, L.muteBtn.w, L.muteBtn.h, '#2b1a10', '#ffffff');
-  text(c, g.save.muted ? '✕' : '♪', L.muteBtn.x + 18, L.muteBtn.y + 21, 18, '#ffffff');
+  text(c, g.save.muted ? 'OFF' : 'ON', L.muteBtn.x + 18, L.muteBtn.y + 21, 10, '#ffffff');
   pill(c, L.pauseBtn.x, L.pauseBtn.y, L.pauseBtn.w, L.pauseBtn.h, '#2b1a10', '#ffffff');
   text(c, g.screen === 'paused' ? '▶' : '❚❚', L.pauseBtn.x + 18, L.pauseBtn.y + 21, 15, '#ffffff');
 }
@@ -291,8 +291,8 @@ function drawStations(c, g) {
     c.fillStyle = '#d8dce2'; rr(c, -8, -26, 16, 52, 4); c.fill();
     c.fillStyle = '#3a2110'; rr(c, -6, 26, 12, 22, 4); c.fill(); c.restore();
     const p = (g.chop.clicks / COOK.chopClicks) * 100;
-    cookBar(c, ch.x + 40, ch.y + 140, ch.w - 80, p);
-    text(c, 'Klik untuk memotong!', ch.x + ch.w / 2, ch.y + 128, 11, '#ffffff', 'center', false);
+    text(c, 'Klik untuk memotong!', ch.x + ch.w / 2, ch.y + 136, 11, '#ffffff', 'center', false);
+    cookBar(c, ch.x + 40, ch.y + 150, ch.w - 80, p);
   } else {
     text(c, 'Taruh selada / tomat / bawang', ch.x + ch.w / 2, ch.y + 82, 12, '#f7e8c8', 'center', false);
   }
@@ -301,6 +301,7 @@ function drawStations(c, g) {
   rr(c, fr.x, fr.y, fr.w, fr.h, 12); c.fillStyle = '#5a5f66'; c.fill();
   c.strokeStyle = '#3a3d42'; c.lineWidth = 3; c.stroke();
   text(c, 'WAJAN', fr.x + fr.w / 2, fr.y + 18, 14, '#ffd76a');
+  text(c, 'Ayam • Kentang • Telur', fr.x + fr.w / 2, fr.y + 36, 11, '#d8dce2', 'center', false);
   for (let i = 0; i < 2; i++) {
     const sx = fr.x + 34 + i * 128, sy = fr.y + 52;
     c.fillStyle = '#2e3134'; circle(c, sx + 42, sy + 34, 42); c.fill();
@@ -320,12 +321,12 @@ function drawStations(c, g) {
       text(c, 'kosong', sx + 42, sy + 34, 12, '#9aa0a8', 'center', false);
     }
   }
-  text(c, 'Ayam • Kentang • Telur', fr.x + fr.w / 2, fr.y + 150, 11, '#d8dce2', 'center', false);
   // --- Panggangan ---
   const gr = L.grill;
   rr(c, gr.x, gr.y, gr.w, gr.h, 12); c.fillStyle = '#4a2c14'; c.fill();
   c.strokeStyle = '#2e1a08'; c.lineWidth = 3; c.stroke();
   text(c, 'PANGGANGAN', gr.x + gr.w / 2, gr.y + 18, 14, '#ffd76a');
+  text(c, 'Patty • Ayam', gr.x + gr.w / 2, gr.y + 36, 11, '#d8dce2', 'center', false);
   for (let i = 0; i < 2; i++) {
     const sx = gr.x + 34 + i * 128, sy = gr.y + 52;
     // bara
@@ -346,7 +347,6 @@ function drawStations(c, g) {
       text(c, 'kosong', sx + 42, sy + 34, 12, '#9aa0a8', 'center', false);
     }
   }
-  text(c, 'Patty • Ayam', gr.x + gr.w / 2, gr.y + 150, 11, '#d8dce2', 'center', false);
 }
 
 // ---- Papan rakitan ----
@@ -366,9 +366,9 @@ function drawBoard(c, g) {
   } else {
     const n = g.board.length;
     g.board.forEach((layer, i) => {
-      const ly = b.y + 128 - i * 7;
+      const ly = b.y + 128 - i * 12;
       const lx = b.x + b.w / 2;
-      drawFood(c, layer.item, lx, ly, 44 - Math.min(10, i * 2));
+      drawFood(c, layer.item, lx, ly, 40);
       if (layer.quality === 'burnt') { text(c, '✕ gosong', lx + 60, ly, 11, '#e2483d', 'left'); }
       else if (layer.quality === 'perfect') { text(c, '★', lx + 60, ly, 13, '#ffd76a', 'left'); }
     });
@@ -471,16 +471,15 @@ function drawOrderBoard(c, g) {
       text(c, 'Hadiah: ' + o.reward + ' koin', L.railR.x + 132, y + 74, 12, '#8a5a2e', 'left', false);
       // daftar bahan
       recipe.layers.forEach((layer, k) => {
-        const x = L.railR.x + 30 + k * 34, yy = y + 106;
+        const x = L.railR.x + 22 + k * 30 + 15, yy = y + 106;
         drawFood(c, layer.item, x, yy, 26);
       });
-      text(c, 'Urutan: ' + recipe.layers.map(l => INGREDIENTS[l.item].name).join(' → '), L.railR.x + 132, y + 132, 10, '#5a3418', 'center', false);
       // bar kesabaran
-      rr(c, L.railR.x + 26, y + 150, 212, 12, 6); c.fillStyle = '#221610'; c.fill();
+      rr(c, L.railR.x + 26, y + 140, 212, 12, 6); c.fillStyle = '#221610'; c.fill();
       c.fillStyle = frac > 0.5 ? '#58b368' : frac > 0.25 ? '#f7c948' : '#e2483d';
-      rr(c, L.railR.x + 26, y + 150, 212 * frac, 12, 6); c.fill();
-      text(c, 'Kesabaran ' + Math.ceil(frac * 100) + '%', L.railR.x + 132, y + 172, 11, '#5a3418', 'center', false);
-      if (selected) { pill(c, L.railR.x + 92, y + 184, 80, 0, 'transparent'); text(c, '● DIRAKIT', L.railR.x + 132, y + 186, 11, '#2e7d32'); }
+      rr(c, L.railR.x + 26, y + 140, 212 * frac, 12, 6); c.fill();
+      text(c, 'Kesabaran ' + Math.ceil(frac * 100) + '%', L.railR.x + 132, y + 162, 11, '#5a3418', 'center', false);
+      if (selected) { text(c, '● DIRAKIT', L.railR.x + 132, y + 180, 11, '#2e7d32'); }
     } else {
       c.strokeStyle = '#8a5a2e'; c.lineWidth = 2; c.stroke();
       text(c, '— menunggu —', L.railR.x + 132, y + 98, 14, '#a08060', 'center', false);
@@ -495,9 +494,9 @@ function drawMenu(c, g) {
   // papan judul kayu
   rr(c, 340, 130, 600, 150, 18); c.fillStyle = '#5a3418'; c.fill();
   c.strokeStyle = '#ffd76a'; c.lineWidth = 4; c.stroke();
-  c.fillStyle = '#ffffff'; c.beginPath(); c.arc(400, 168, 26, Math.PI, 0); c.fill();
-  circle(c, 376, 164, 13); c.fill(); circle(c, 424, 164, 13); c.fill();
-  rr(c, 372, 168, 56, 12, 5); c.fill();
+  c.fillStyle = '#ffffff'; c.beginPath(); c.arc(400, 166, 20, Math.PI, 0); c.fill();
+  circle(c, 382, 162, 10); c.fill(); circle(c, 418, 162, 10); c.fill();
+  rr(c, 370, 168, 60, 13, 5); c.fill();
   text(c, "CHEF'S RUSH", 640, 190, 52, '#ffd76a');
   text(c, 'KITCHEN MASTER', 640, 240, 24, '#f7e8c8');
   text(c, 'Terima pesanan • Potong • Goreng • Panggang • Rakit • Sajikan!', 640, 320, 18, '#ffffff', 'center', false);
