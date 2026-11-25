@@ -1,0 +1,5 @@
+html, body { margin: 0; padding: 0; background: #17100a; height: 100%; }
+body { display: flex; align-items: center; justify-content: center; font-family: "Trebuchet MS", Verdana, sans-serif; }
+#wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+#game { width: min(1280px, 98vw); height: auto; border-radius: 10px; box-shadow: 0 12px 48px rgba(0,0,0,0.65); background: #2b1a10; cursor: pointer; }
+#note { color: #c9a06a; font-size: 13px; letter-spacing: 0.4px; }
