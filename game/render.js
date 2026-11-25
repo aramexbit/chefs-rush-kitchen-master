@@ -16,21 +16,76 @@ function pill(c, x, y, w, h, fill, stroke) {
   rr(c, x, y, w, h, h / 2); c.fillStyle = fill; c.fill();
   if (stroke) { c.strokeStyle = stroke; c.lineWidth = 2; c.stroke(); }
 }
+// campur dua warna hex (t 0..1) — untuk perubahan warna saat dimasak
+function mix(a, b, t) {
+  t = Math.max(0, Math.min(1, t));
+  const pa = [1, 3, 5].map(i => parseInt(a.substr(i, 2), 16));
+  const pb = [1, 3, 5].map(i => parseInt(b.substr(i, 2), 16));
+  const m = pa.map((v, i) => Math.round(v + (pb[i] - v) * t));
+  return 'rgb(' + m[0] + ',' + m[1] + ',' + m[2] + ')';
+}
+// petakan quality ('raw'|'good'|'perfect'|'burnt') ke persen masak
+function qPct(q) { return q === 'raw' ? 8 : q === 'perfect' ? 85 : q === 'burnt' ? 115 : 60; }
+// uap/asap naik dari makanan panas
+function drawSteam(c, x, y, t, n, color) {
+  c.save();
+  for (let i = 0; i < n; i++) {
+    const ph = (t * 0.6 + i / n) % 1;
+    const sy = y - ph * 26;
+    const sx = x + Math.sin(ph * 6 + i * 2.2) * 6;
+    c.globalAlpha = (1 - ph) * 0.45;
+    c.fillStyle = color || '#ffffff';
+    circle(c, sx, sy, 3 + ph * 5); c.fill();
+  }
+  c.restore();
+}
+// garis panggangan (grill mark) di atas patty/ayam
+function grillMarks(c, x, y, r) {
+  c.save();
+  c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.clip();
+  c.strokeStyle = 'rgba(40,18,8,0.5)'; c.lineWidth = 4;
+  [-0.5, 0, 0.5].forEach(o => {
+    c.beginPath(); c.moveTo(x + o * r - r * 0.4, y - r); c.lineTo(x + o * r + r * 0.4, y + r); c.stroke();
+  });
+  c.restore();
+}
 
 // ---- Gambar makanan (ikon per bahan) ----
-export function drawFood(c, item, x, y, s) {
+// pct = persen masak (0 mentah, 71-90 perfect, >100 gosong). Tanpa pct = mentah.
+export function drawFood(c, item, x, y, s, pct) {
   const u = s / 2;
+  const p = pct == null ? 0 : pct;
   c.save(); c.translate(x, y);
   if (item === 'bun') {
-    c.fillStyle = '#d98f2e'; rr(c, -u, -u * 0.1, s, u * 0.7, u * 0.3); c.fill();
-    c.fillStyle = '#f2b95c'; c.beginPath(); c.arc(0, -u * 0.1, u, Math.PI, 0); c.fill();
+    const toasted = p >= 60;
+    c.fillStyle = toasted ? '#b96f1e' : '#d98f2e'; rr(c, -u, -u * 0.1, s, u * 0.7, u * 0.3); c.fill();
+    c.fillStyle = toasted ? '#e8a33c' : '#f2b95c'; c.beginPath(); c.arc(0, -u * 0.1, u, Math.PI, 0); c.fill();
+    if (toasted) {
+      c.fillStyle = 'rgba(255,240,200,0.55)';
+      c.beginPath(); c.arc(-u * 0.3, -u * 0.45, u * 0.35, Math.PI, 0); c.fill();
+    }
     c.fillStyle = '#fff2cf';
-    [[-0.4, -0.55], [0.1, -0.75], [0.45, -0.5]].forEach(p => { circle(c, p[0] * u, p[1] * u, u * 0.12); c.fill(); });
+    [[-0.4, -0.55], [0.1, -0.75], [0.45, -0.5]].forEach(pt => { circle(c, pt[0] * u, pt[1] * u, u * 0.12); c.fill(); });
   } else if (item === 'patty') {
-    c.fillStyle = '#6e3a1e'; circle(c, 0, 0, u * 0.95); c.fill();
-    c.fillStyle = '#8a4b2a'; circle(c, 0, -u * 0.1, u * 0.8); c.fill();
-    c.strokeStyle = '#5a2e16'; c.lineWidth = 2;
-    [-0.4, 0, 0.4].forEach(o => { c.beginPath(); c.moveTo(o * u, -u * 0.6); c.lineTo(o * u, u * 0.55); c.stroke(); });
+    // mentah merah muda -> cokelat keemasan -> gosong hampir hitam
+    let col;
+    if (p < 26) col = mix('#c96a5a', '#8a4b2a', p / 26);
+    else if (p <= 70) col = mix('#8a4b2a', '#6e3a1e', (p - 26) / 44);
+    else if (p <= 90) col = '#6e3a1e';
+    else if (p <= 100) col = mix('#6e3a1e', '#3a1c0c', (p - 90) / 10);
+    else col = '#241209';
+    c.fillStyle = col; circle(c, 0, 0, u * 0.95); c.fill();
+    c.fillStyle = mix(col, '#ffffff', 0.14); circle(c, 0, -u * 0.1, u * 0.8); c.fill();
+    if (p >= 26 && p <= 100) {
+      // kilau sear + serat daging
+      c.fillStyle = 'rgba(255,220,170,0.35)';
+      c.beginPath(); c.arc(-u * 0.25, -u * 0.35, u * 0.4, Math.PI, 0); c.fill();
+      c.strokeStyle = 'rgba(60,30,12,0.4)'; c.lineWidth = 2;
+      [-0.4, 0, 0.4].forEach(o => { c.beginPath(); c.moveTo(o * u, -u * 0.6); c.lineTo(o * u, u * 0.55); c.stroke(); });
+    }
+    if (p > 100) {
+      c.fillStyle = 'rgba(0,0,0,0.35)'; circle(c, 0, 0, u * 0.7); c.fill();
+    }
   } else if (item === 'lettuce') {
     c.fillStyle = '#3f9e4d';
     for (let i = 0; i < 5; i++) { const a = (i / 5) * Math.PI * 2; circle(c, Math.cos(a) * u * 0.55, Math.sin(a) * u * 0.55, u * 0.45); c.fill(); }
@@ -44,25 +99,68 @@ export function drawFood(c, item, x, y, s) {
     [0.85, 0.55, 0.28].forEach(r => { circle(c, 0, 0, u * r); c.stroke(); });
     c.fillStyle = '#e8d0f0'; circle(c, 0, 0, u * 0.16); c.fill();
   } else if (item === 'cheese') {
-    c.fillStyle = '#f7c948'; c.beginPath(); c.moveTo(-u, u * 0.7); c.lineTo(u, u * 0.7); c.lineTo(0, -u * 0.8); c.closePath(); c.fill();
+    const melted = p >= 60;
+    c.fillStyle = melted ? '#f7b62e' : '#f7c948';
+    c.beginPath(); c.moveTo(-u, u * 0.7); c.lineTo(u, u * 0.7); c.lineTo(0, -u * 0.8); c.closePath(); c.fill();
+    if (melted) {
+      // lelehan keju menetes di bawah
+      c.fillStyle = '#f7b62e';
+      [-0.5, 0.1, 0.55].forEach(o => { circle(c, o * u, u * 0.85, u * 0.16); c.fill(); });
+      c.fillStyle = 'rgba(255,235,160,0.6)';
+      c.beginPath(); c.moveTo(-u * 0.5, u * 0.2); c.lineTo(u * 0.3, u * 0.2); c.lineTo(0, -u * 0.5); c.closePath(); c.fill();
+    }
     c.fillStyle = '#e8a91e'; circle(c, -u * 0.2, u * 0.25, u * 0.14); c.fill(); circle(c, u * 0.25, u * 0.05, u * 0.11); c.fill();
   } else if (item === 'pickle') {
     c.fillStyle = '#6f9e3f'; c.beginPath(); c.ellipse(0, 0, u * 0.95, u * 0.55, 0, 0, Math.PI * 2); c.fill();
     c.fillStyle = '#9ccb6a';
     [[-0.45, -0.1], [0, 0.12], [0.45, -0.08]].forEach(p => { circle(c, p[0] * u, p[1] * u, u * 0.1); c.fill(); });
   } else if (item === 'chicken') {
-    c.fillStyle = '#e8b04b'; circle(c, -u * 0.15, -u * 0.1, u * 0.7); c.fill();
-    c.fillStyle = '#c98a2e'; circle(c, -u * 0.15, -u * 0.1, u * 0.45); c.fill();
+    // mentah pucat kemerahan -> keemasan -> gosong
+    let col, dark;
+    if (p < 26) { col = '#e8b4a0'; dark = '#d89a86'; }
+    else if (p <= 70) { col = mix('#e8b4a0', '#e8b04b', (p - 26) / 44); dark = mix('#d89a86', '#c98a2e', (p - 26) / 44); }
+    else if (p <= 90) { col = '#e8b04b'; dark = '#c98a2e'; }
+    else if (p <= 100) { col = mix('#e8b04b', '#7a4a1e', (p - 90) / 10); dark = mix('#c98a2e', '#5a3410', (p - 90) / 10); }
+    else { col = '#2e1a10'; dark = '#1e1008'; }
+    c.fillStyle = col; circle(c, -u * 0.15, -u * 0.1, u * 0.7); c.fill();
+    c.fillStyle = dark; circle(c, -u * 0.15, -u * 0.1, u * 0.45); c.fill();
+    if (p >= 26 && p <= 100) {
+      c.fillStyle = 'rgba(255,230,180,0.4)';
+      c.beginPath(); c.arc(-u * 0.35, -u * 0.35, u * 0.3, Math.PI, 0); c.fill();
+    }
     c.strokeStyle = '#f5e6c8'; c.lineWidth = u * 0.22; c.beginPath(); c.moveTo(u * 0.3, u * 0.3); c.lineTo(u * 0.8, u * 0.8); c.stroke();
     c.fillStyle = '#f5e6c8'; circle(c, u * 0.85, u * 0.85, u * 0.22); c.fill();
   } else if (item === 'fries') {
+    // mentah pucat -> kuning keemasan -> cokelat gosong
+    let stick;
+    if (p < 26) stick = '#f2e3b0';
+    else if (p <= 70) stick = mix('#f2e3b0', '#f2c14e', (p - 26) / 44);
+    else if (p <= 90) stick = '#f2c14e';
+    else if (p <= 100) stick = mix('#f2c14e', '#8a5a2e', (p - 90) / 10);
+    else stick = '#3a2410';
     c.fillStyle = '#d8342a'; rr(c, -u * 0.7, -u * 0.2, u * 1.4, u * 0.9, u * 0.15); c.fill();
-    c.strokeStyle = '#f2c14e'; c.lineWidth = u * 0.28;
+    c.strokeStyle = stick; c.lineWidth = u * 0.28;
     [-0.4, 0, 0.4].forEach(o => { c.beginPath(); c.moveTo(o * u, -u * 0.2); c.lineTo(o * u, -u * 0.95); c.stroke(); });
+    if (p >= 26 && p <= 100) {
+      c.fillStyle = 'rgba(255,255,255,0.5)';
+      circle(c, -u * 0.4, -u * 0.8, u * 0.08); c.fill(); circle(c, u * 0.1, -u * 0.9, u * 0.06); c.fill();
+    }
   } else if (item === 'egg') {
+    // mentah: putih bening + kuning encer -> matang: putih padat + kuning kokoh -> gosong: tepi cokelat
+    const cooked = Math.min(1, Math.max(0, (p - 10) / 60));
+    c.save(); c.globalAlpha = 0.55 + 0.45 * cooked;
     c.fillStyle = '#ffffff'; circle(c, 0, 0, u * 0.95); c.fill();
-    c.fillStyle = '#f7c948'; circle(c, 0, 0, u * 0.5); c.fill();
-    c.fillStyle = '#e8a91e'; circle(c, 0, 0, u * 0.3); c.fill();
+    c.restore();
+    const yolkR = u * (0.62 - 0.12 * cooked);
+    c.fillStyle = p > 100 ? '#8a5a1e' : '#f7c948'; circle(c, 0, 0, yolkR); c.fill();
+    c.fillStyle = p > 100 ? '#5a3410' : '#e8a91e'; circle(c, 0, 0, yolkR * 0.6); c.fill();
+    if (p > 100) {
+      c.strokeStyle = '#5a3410'; c.lineWidth = 3;
+      c.beginPath(); c.arc(0, 0, u * 0.9, 0, Math.PI * 2); c.stroke();
+    } else if (p >= 26) {
+      c.fillStyle = 'rgba(255,255,255,0.7)';
+      c.beginPath(); c.arc(-u * 0.3, -u * 0.35, u * 0.22, Math.PI, 0); c.fill();
+    }
   } else if (item === 'bread') {
     c.fillStyle = '#e8b96a'; rr(c, -u * 0.85, -u * 0.85, u * 1.7, u * 1.7, u * 0.3); c.fill();
     c.fillStyle = '#f7e3b0'; rr(c, -u * 0.65, -u * 0.65, u * 1.3, u * 1.3, u * 0.2); c.fill();
@@ -294,6 +392,14 @@ function drawStations(c, g) {
     c.save(); c.translate(ch.x + ch.w / 2 + 52, ch.y + 82); c.rotate(-0.5 + Math.sin(g.time * 20) * 0.08);
     c.fillStyle = '#d8dce2'; rr(c, -8, -26, 16, 52, 4); c.fill();
     c.fillStyle = '#3a2110'; rr(c, -6, 26, 12, 22, 4); c.fill(); c.restore();
+    // garis potong muncul bertahap mengikuti progres
+    const prog = g.chop.clicks / COOK.chopClicks;
+    c.strokeStyle = 'rgba(60,30,12,0.55)'; c.lineWidth = 2;
+    [[-12, 0.25], [0, 0.5], [12, 0.75]].forEach(([o, th]) => {
+      if (prog >= th) {
+        c.beginPath(); c.moveTo(ch.x + ch.w / 2 - 30 + o, ch.y + 64); c.lineTo(ch.x + ch.w / 2 - 30 + o, ch.y + 100); c.stroke();
+      }
+    });
     const p = (g.chop.clicks / COOK.chopClicks) * 100;
     text(c, 'Klik untuk memotong!', ch.x + ch.w / 2, ch.y + 136, 11, '#ffffff', 'center', false);
     cookBar(c, ch.x + 40, ch.y + 150, ch.w - 80, p);
@@ -312,14 +418,21 @@ function drawStations(c, g) {
     c.strokeStyle = '#8a8f96'; c.lineWidth = 3; c.stroke();
     const slot = g.fry[i];
     if (slot) {
-      drawFood(c, slot.item, sx + 42, sy + 34, 52);
       const pct = cookPct(g, slot, 'fry');
+      // minyak panas berkilau di wajan
+      c.fillStyle = 'rgba(232,180,60,0.35)'; circle(c, sx + 42, sy + 34, 36); c.fill();
+      drawFood(c, slot.item, sx + 42, sy + 34, 52, pct);
       cookBar(c, sx, sy + 86, 84, pct);
-      if (pct > 100) { c.fillStyle = 'rgba(60,60,60,0.5)'; circle(c, sx + 42, sy + 34, 30); c.fill(); }
-      if (pct >= 26 && pct <= 100) {
-        c.fillStyle = 'rgba(255,255,255,0.7)';
-        circle(c, sx + 30 + Math.sin(g.time * 6 + i) * 6, sy + 10, 3); c.fill();
-        circle(c, sx + 55 + Math.cos(g.time * 5 + i) * 6, sy + 4, 2.5); c.fill();
+      if (pct > 100) {
+        c.fillStyle = 'rgba(60,60,60,0.5)'; circle(c, sx + 42, sy + 34, 30); c.fill();
+        drawSteam(c, sx + 42, sy + 6, g.time + i, 2, '#7a7a7a');
+      } else if (pct >= 26) {
+        drawSteam(c, sx + 42, sy + 6, g.time + i, pct >= 71 ? 3 : 2);
+        // gelembung minyak berdesis
+        c.fillStyle = 'rgba(255,235,160,0.85)';
+        [[20, 52], [42, 60], [64, 50]].forEach((b, k) => {
+          circle(c, sx + b[0] + Math.sin(g.time * 7 + k * 2 + i) * 4, sy + b[1] + Math.cos(g.time * 5 + k) * 3, 2.5); c.fill();
+        });
       }
     } else {
       emptySlot(c, sx + 42, sy + 34);
@@ -344,9 +457,17 @@ function drawStations(c, g) {
     if (slot) {
       const pct = cookPct(g, slot, 'grill');
       if (pct >= 26 && pct <= 100) { drawFlame(c, sx + 20, sy + 66, g.time, 0.8); drawFlame(c, sx + 64, sy + 66, g.time + 1, 0.7); }
-      drawFood(c, slot.item, sx + 42, sy + 34, 52);
+      drawFood(c, slot.item, sx + 42, sy + 34, 52, pct);
+      if (pct > 40 && pct <= 100 && (slot.item === 'patty' || slot.item === 'chicken')) {
+        grillMarks(c, sx + 42, sy + 34, 26);
+      }
       cookBar(c, sx, sy + 86, 84, pct);
-      if (pct > 100) { c.fillStyle = 'rgba(60,60,60,0.5)'; circle(c, sx + 42, sy + 34, 30); c.fill(); }
+      if (pct > 100) {
+        c.fillStyle = 'rgba(60,60,60,0.5)'; circle(c, sx + 42, sy + 34, 30); c.fill();
+        drawSteam(c, sx + 42, sy + 6, g.time + i, 2, '#7a7a7a');
+      } else if (pct >= 26) {
+        drawSteam(c, sx + 42, sy + 6, g.time + i, pct >= 71 ? 3 : 2);
+      }
     } else {
       emptySlot(c, sx + 42, sy + 34);
     }
@@ -372,7 +493,7 @@ function drawBoard(c, g) {
     g.board.forEach((layer, i) => {
       const ly = b.y + 128 - i * 12;
       const lx = b.x + b.w / 2;
-      drawFood(c, layer.item, lx, ly, 40);
+      drawFood(c, layer.item, lx, ly, 40, qPct(layer.quality));
       if (layer.quality === 'burnt') { text(c, '✕ gosong', lx + 60, ly, 11, '#e2483d', 'left'); }
       else if (layer.quality === 'perfect') { text(c, '★', lx + 60, ly, 13, '#ffd76a', 'left'); }
     });
@@ -416,8 +537,9 @@ function drawPlates(c, g) {
     if (dish) {
       const recipe = RECIPES[dish.recipeId];
       // gambar mini hidangan: tumpuk 3 layer teratas
+      const dp = dish.burnt ? 115 : dish.perfect ? 85 : 60;
       const layers = recipe.layers.slice(-3);
-      layers.forEach((layer, k) => drawFood(c, layer.item, x, y - k * 6, 30));
+      layers.forEach((layer, k) => drawFood(c, layer.item, x, y - k * 6, 30, dp));
       if (dish.burnt) text(c, 'gosong', x, y + 52, 11, '#e2483d');
       else if (dish.perfect) text(c, '★ perfect', x, y + 52, 11, '#ffd76a');
       else text(c, recipe.name, x, y + 52, 10, '#ffffff', 'center', false);
@@ -477,7 +599,7 @@ function drawOrderBoard(c, g) {
       text(c, 'PESANAN #' + String(o.id).padStart(2, '0'), L.railR.x + 132, y + 18, 13, '#8a5a2e');
       // ikon hidangan: tumpukan mini 3 lapis (bukan 1 bahan saja)
       const iconLayers = [recipe.layers[0], recipe.layers[Math.floor(recipe.layers.length / 2)], recipe.layers[recipe.layers.length - 1]];
-      iconLayers.forEach((layer, k) => drawFood(c, layer.item, L.railR.x + 40, y + 62 - k * 8, 34));
+      iconLayers.forEach((layer, k) => drawFood(c, layer.item, L.railR.x + 40, y + 62 - k * 8, 34, 85));
       text(c, recipe.name, L.railR.x + 132, y + 52, 15, '#3a2110', 'left');
       text(c, 'Hadiah: ' + o.reward + ' koin', L.railR.x + 132, y + 74, 12, '#8a5a2e', 'left', false);
       // daftar bahan
@@ -591,10 +713,11 @@ function drawHeld(c, g, mx, my) {
     const recipe = RECIPES[g.held.recipeId];
     c.fillStyle = '#f5f0e6'; circle(c, mx, my, 26); c.fill();
     c.strokeStyle = '#c8bfa8'; c.lineWidth = 2; c.stroke();
-    recipe.layers.slice(-2).forEach((layer, k) => drawFood(c, layer.item, mx, my - k * 5, 26));
+    const dp = g.held.burnt ? 115 : g.held.perfect ? 85 : 60;
+    recipe.layers.slice(-2).forEach((layer, k) => drawFood(c, layer.item, mx, my - k * 5, 26, dp));
     text(c, recipe.name, mx, my + 40, 11, '#ffffff');
   } else {
-    drawFood(c, g.held.item, mx, my, 44);
+    drawFood(c, g.held.item, mx, my, 44, qPct(g.held.quality));
     const label = INGREDIENTS[g.held.item].name + (g.held.process !== 'raw' ? ' (' + g.held.process + ')' : '');
     pill(c, mx - 52, my + 26, 104, 20, 'rgba(20,12,6,0.85)');
     text(c, label, mx, my + 37, 10, '#ffffff');
