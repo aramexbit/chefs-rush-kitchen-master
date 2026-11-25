@@ -2,7 +2,7 @@
 // Semua logika gameplay: pesanan, memasak, merakit, menyajikan, skor, ekonomi.
 
 import { W, H, INGREDIENTS, BIN_ORDER, CHOP_ITEMS, FRY_ITEMS, GRILL_ITEMS,
-  RECIPES, LEVELS, COOK, SCORE, UPGRADES, UPGRADE_MAX, CUSTOMERS, SAVE_KEY } from './config.js';
+  RECIPES, LEVELS, COOK, SCORE, UPGRADES, UPGRADE_MAX, CUSTOMERS, SAVE_KEY } from './config.js?v=13';
 
 // ---- Layout (dipakai render.js & input.js juga) ----
 export const L = {

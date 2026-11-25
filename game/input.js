@@ -1,8 +1,8 @@
 // Chef's Rush — input mouse & keyboard (klik semua stasiun, tombol, dan tiket).
-import { LEVELS, UPGRADES } from './config.js';
+import { LEVELS, UPGRADES } from './config.js?v=13';
 import { L, startLevel, clickBin, clickChop, clickFry, clickGrill, clickBoard,
-  clickPlate, clickTrash, clickServe, selectOrder, buyUpgrade, togglePause } from './world.js';
-import { sfx, setMuted } from './audio.js';
+  clickPlate, clickTrash, clickServe, selectOrder, buyUpgrade, togglePause } from './world.js?v=13';
+import { sfx, setMuted } from './audio.js?v=13';
 
 function inRect(x, y, r) { return x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h; }
 function inCircle(x, y, cx, cy, rad) { const dx = x - cx, dy = y - cy; return dx * dx + dy * dy <= rad * rad; }

@@ -1,6 +1,6 @@
 // Chef's Rush — semua gambar digambar dari kode (canvas 2D, tanpa aset luar).
-import { W, H, INGREDIENTS, BIN_ORDER, RECIPES, LEVELS, CUSTOMERS, COOK, UPGRADES, UPGRADE_MAX } from './config.js';
-import { L, cookPct, targetOrder } from './world.js';
+import { W, H, INGREDIENTS, BIN_ORDER, RECIPES, LEVELS, CUSTOMERS, COOK, UPGRADES, UPGRADE_MAX } from './config.js?v=13';
+import { L, cookPct, targetOrder } from './world.js?v=13';
 
 function rr(c, x, y, w, h, r) {
   c.beginPath();

@@ -1,9 +1,9 @@
 // Chef's Rush — boot: buat game, pasang input, jalankan loop utama.
-import { createGame, update } from './world.js';
-import { render } from './render.js';
-import { attachInput } from './input.js';
-import { setMuted, sfx } from './audio.js';
-import { installShots } from './shots.js';
+import { createGame, update } from './world.js?v=13';
+import { render } from './render.js?v=13';
+import { attachInput } from './input.js?v=13';
+import { setMuted, sfx } from './audio.js?v=13';
+import { installShots } from './shots.js?v=13';
 
 export function boot() {
   const canvas = document.getElementById('game');

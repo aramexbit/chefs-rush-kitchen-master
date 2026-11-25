@@ -1,8 +1,8 @@
 // Chef's Rush — bantuan staging untuk screenshot (bukan gameplay).
 // Probe memanggil window.__rush.stage('menu'|'select'|'play'|'serve'|'complete'),
 // lalu menunggu window.__shotReady.
-import { RECIPES, CUSTOMERS } from './config.js';
-import { startLevel, patienceOf } from './world.js';
+import { RECIPES, CUSTOMERS } from './config.js?v=13';
+import { startLevel, patienceOf } from './world.js?v=13';
 
 function fakeOrder(g, id, recipeId, cust, patienceFrac) {
   const maxP = patienceOf(g, g.level);
