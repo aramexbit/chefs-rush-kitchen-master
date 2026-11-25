@@ -1,7 +1,8 @@
 # Chef's Rush: Kitchen Master
 
-[![Play](https://img.shields.io/badge/play-online-brightgreen)](https://aramexbit.github.io/chefs-rush-kitchen-master/)
-[![make.fun](https://img.shields.io/badge/make.fun-bounty-orange)](https://make.fun/bounty/best-cooking-game-20261125-0137)
+[![make.fun · best-cooking-game-20261125-0137](https://make.fun/badge/best-cooking-game-20261125-0137.svg)](https://make.fun/bounty/best-cooking-game-20261125-0137?utm_source=github&utm_medium=readme&utm_campaign=best-cooking-game-20261125-0137)
+[![rank](https://make.fun/badge/best-cooking-game-20261125-0137/aramexbit/chefs-rush-kitchen-master/rank.svg)](https://make.fun/bounty/best-cooking-game-20261125-0137/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=best-cooking-game-20261125-0137)
+[![reward](https://make.fun/badge/best-cooking-game-20261125-0137/aramexbit/chefs-rush-kitchen-master/reward.svg)](https://make.fun/bounty/best-cooking-game-20261125-0137?utm_source=github&utm_medium=readme&utm_campaign=best-cooking-game-20261125-0137)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 Game memasak 2D top-down: terima pesanan, potong, goreng, panggang, rakit sesuai urutan resep, lalu sajikan sebelum pelanggan kehabisan sabar.
