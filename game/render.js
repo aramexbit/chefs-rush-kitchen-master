@@ -833,9 +833,89 @@ function drawOrderBoard(c, g) {
 
 // ---- Layar-layar ----
 function overlay(c, alpha) { c.fillStyle = 'rgba(20,12,6,' + alpha + ')'; c.fillRect(0, 0, W, H); }
+// tenda awning garis-garis di atas papan judul (khas warung burger)
+function drawSignAwning(c, x, y, w) {
+  const sw = 60, h = 24;
+  for (let i = 0; i < Math.floor(w / sw); i++) {
+    c.fillStyle = i % 2 ? '#FFF8E0' : '#FFB43B';
+    c.fillRect(x + i * sw, y, sw, h);
+    // ujung membulat (scallop) di bawah tiap garis
+    c.beginPath(); c.ellipse(x + i * sw + sw / 2, y + h, sw / 2, 12, 0, 0, Math.PI); c.fill();
+  }
+  // bayangan tipis di bawah awning
+  c.fillStyle = 'rgba(20,10,4,0.3)';
+  c.fillRect(x, y + h + 12, w, 3);
+}
+// burger pahlawan besar (menu utama) — burger + uap + bendera
+function drawHeroBurger(c, x, y, s, t) {
+  drawBurgerDeco(c, x, y, s);
+  // uap hangat di atas burger
+  drawSteam(c, x, y - s * 0.55, t, 3, 'rgba(255,255,255,0.8)');
+  // tusuk bendera merah di puncak burger
+  c.strokeStyle = '#8a5a2e'; c.lineWidth = 3;
+  c.beginPath(); c.moveTo(x, y - s * 0.55); c.lineTo(x, y - s * 0.95); c.stroke();
+  c.fillStyle = '#e2483d';
+  c.beginPath(); c.moveTo(x, y - s * 0.95); c.lineTo(x + s * 0.28, y - s * 0.86); c.lineTo(x, y - s * 0.77); c.closePath(); c.fill();
+}
+// kentang goreng dalam kemasan merah
+function drawFries(c, x, y, s) {
+  // kentang kuning menjulang
+  c.fillStyle = '#f2c14e';
+  [-0.3, -0.1, 0.1, 0.3].forEach((o, i) => {
+    rr(c, x + o * s - s * 0.07, y - s * (0.75 + (i % 2) * 0.12), s * 0.14, s * 0.6, s * 0.05); c.fill();
+  });
+  // kemasan merah
+  c.fillStyle = '#e2483d';
+  c.beginPath(); c.moveTo(x - s * 0.45, y - s * 0.35); c.lineTo(x + s * 0.45, y - s * 0.35);
+  c.lineTo(x + s * 0.32, y + s * 0.4); c.lineTo(x - s * 0.32, y + s * 0.4); c.closePath(); c.fill();
+  // logo lingkaran putih di kemasan
+  c.fillStyle = '#fff3d0'; circle(c, x, y + s * 0.05, s * 0.16); c.fill();
+  c.fillStyle = '#e2483d'; circle(c, x, y + s * 0.05, s * 0.1); c.fill();
+}
+// gelas minuman dingin + sedotan
+function drawDrink(c, x, y, s) {
+  // sedotan
+  c.strokeStyle = '#FFB43B'; c.lineWidth = s * 0.09; c.lineCap = 'round';
+  c.beginPath(); c.moveTo(x + s * 0.08, y - s * 0.55); c.lineTo(x + s * 0.28, y - s * 1.0); c.stroke();
+  // gelas
+  c.fillStyle = '#e2483d';
+  c.beginPath(); c.moveTo(x - s * 0.4, y - s * 0.5); c.lineTo(x + s * 0.4, y - s * 0.5);
+  c.lineTo(x + s * 0.3, y + s * 0.5); c.lineTo(x - s * 0.3, y + s * 0.5); c.closePath(); c.fill();
+  // tutup gelas
+  c.fillStyle = '#fff3d0'; rr(c, x - s * 0.46, y - s * 0.58, s * 0.92, s * 0.14, s * 0.05); c.fill();
+  // gelembung es
+  c.fillStyle = 'rgba(255,255,255,0.5)';
+  circle(c, x - s * 0.12, y + s * 0.1, s * 0.07); c.fill();
+  circle(c, x + s * 0.14, y + s * 0.25, s * 0.06); c.fill();
+}
+// papan menu harga ala warung burger (kanan layar menu)
+function drawMenuBoard(c, x, y, w, h) {
+  // bingkai kayu + papan tulis gelap
+  rr(c, x, y, w, h, 12); c.fillStyle = '#A85F2B'; c.fill();
+  rr(c, x + 6, y + 6, w - 12, h - 12, 8); c.fillStyle = '#2e1a10'; c.fill();
+  text(c, '★ MENU HARI INI ★', x + w / 2, y + 26, 15, '#FFD84A');
+  c.strokeStyle = 'rgba(255,216,74,0.4)'; c.lineWidth = 1.5;
+  c.beginPath(); c.moveTo(x + 16, y + 44); c.lineTo(x + w - 16, y + 44); c.stroke();
+  const items = [
+    ['bun', 'Classic Burger', '35'],
+    ['chicken', 'Chicken Burger', '45'],
+    ['patty', 'Double Beef', '60'],
+  ];
+  items.forEach((it, i) => {
+    const iy = y + 76 + i * 52;
+    drawFood(c, it[0], x + 34, iy, 34, 85);
+    text(c, it[1], x + 58, iy - 2, 14, '#fff3d0', 'left', false);
+    text(c, it[2] + ' koin', x + w - 18, iy - 2, 14, '#FFD84A', 'right');
+  });
+  c.strokeStyle = 'rgba(255,216,74,0.4)'; c.lineWidth = 1.5;
+  c.beginPath(); c.moveTo(x + 16, y + h - 36); c.lineTo(x + w - 16, y + h - 36); c.stroke();
+  text(c, 'Dibuat segar • Disajikan panas!', x + w / 2, y + h - 18, 12, '#f7e8c8', 'center', false);
+}
 function drawMenu(c, g) {
   overlay(c, 0.55);
-  // papan judul kayu mengilap
+  // awning garis-garis di atas papan judul (khas warung burger)
+  drawSignAwning(c, 340, 104, 600);
+  // papan judul kayu mengilap (di bawah awning)
   glossPanel(c, 340, 130, 600, 150, 18, '#A85F2B', '#653719', '#FFD84A');
   drawLeaf(c, 360, 150, 16, -0.7); drawLeaf(c, 372, 142, 12, -0.2);
   drawLeaf(c, 920, 150, 16, 0.7); drawLeaf(c, 908, 142, 12, 0.2);
@@ -846,6 +926,12 @@ function drawMenu(c, g) {
   text(c, 'KITCHEN MASTER', 640, 240, 24, '#f7e8c8');
   text(c, 'Terima pesanan • Potong • Goreng • Panggang • Rakit • Sajikan!', 640, 320, 18, '#ffffff', 'center', false);
   text(c, 'Klik MAIN untuk mulai. P = jeda, M = suara.', 640, 348, 15, '#f2c078', 'center', false);
+  // burger pahlawan + kentang + minuman (kiri — paket penjual burger)
+  drawHeroBurger(c, 170, 450, 118, g.time);
+  drawFries(c, 300, 530, 52);
+  drawDrink(c, 362, 525, 54);
+  // papan menu harga (kanan — daftar burger yang dijual)
+  drawMenuBoard(c, 990, 150, 250, 230);
   // tombol main mengilap
   c.fillStyle = 'rgba(20,10,4,0.35)'; rr(c, 493, 405, 300, 70, 35); c.fill();
   const mg = c.createLinearGradient(0, 400, 0, 470);
