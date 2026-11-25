@@ -810,7 +810,7 @@ function drawOrderBoard(c, g) {
       iconLayers.forEach((layer, k) => drawFood(c, layer.item, L.railR.x + 42, y + 64 - k * 9, 40, 85));
       c.fillStyle = 'rgba(255,255,255,0.5)';
       c.beginPath(); c.arc(L.railR.x + 30, y + 34, 9, Math.PI, 0); c.fill();
-      text(c, recipe.name, L.railR.x + 132, y + 52, 15, '#2e1a10', 'left');
+      text(c, recipe.name, L.railR.x + 132, y + 52, 13, '#2e1a10', 'left');
       text(c, 'Hadiah: ' + o.reward + ' koin', L.railR.x + 132, y + 74, 12, '#653719', 'left', false);
       // daftar bahan
       recipe.layers.forEach((layer, k) => {

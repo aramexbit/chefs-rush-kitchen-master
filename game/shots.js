@@ -45,6 +45,27 @@ export function installShots(g) {
         g.plates[0] = { recipeId: 'classic', burnt: false, perfect: true };
         g.score = 240;
         g.coinsEarned = 70;
+      } else if (name === 'win') {
+        // momen menang: 3 pelanggan senang, skor tinggi, SERVE siap
+        startLevel(g, 1);
+        g.timeLeft = 96;
+        g.orders = [
+          fakeOrder(g, 1, 'classic', 0, 0.95),
+          fakeOrder(g, 2, 'chicken', 1, 0.9),
+          fakeOrder(g, 3, 'double', 2, 0.88),
+        ];
+        g.nextOrderId = 4;
+        g.targetOrderId = 1;
+        g.plates[0] = { recipeId: 'classic', burnt: false, perfect: true };
+        g.grill[0] = { item: 'patty', t: 3.0 };
+        g.fry[0] = { item: 'chicken', t: 3.6 };
+        g.chop = { item: 'tomato', clicks: 2 };
+        g.board = [
+          { item: 'bun', process: 'raw', quality: 'raw' },
+          { item: 'lettuce', process: 'chop', quality: 'good' },
+        ];
+        g.score = 520;
+        g.coinsEarned = 140;
       } else if (name === 'complete') {
         startLevel(g, 1);
         g.score = 520;
