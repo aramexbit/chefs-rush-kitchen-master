@@ -126,25 +126,18 @@ export function drawFace(c, custIdx, x, y, r, mood) {
 
 // ---- Latar dapur ----
 function drawBackground(c, g) {
-  // dinding
+  // dinding krem bersih (tanpa pola — tenang dan jernih)
   const wall = c.createLinearGradient(0, 0, 0, 200);
-  wall.addColorStop(0, '#f7e8c8'); wall.addColorStop(1, '#e8cfa0');
+  wall.addColorStop(0, '#faf3e0'); wall.addColorStop(1, '#f0dfbc');
   c.fillStyle = wall; c.fillRect(0, 0, W, 200);
-  // jendela (ruang pelanggan di kejauhan)
-  c.fillStyle = '#9ecfee'; rr(c, 560, 18, 160, 90, 8); c.fill();
-  c.fillStyle = '#e8f6ff'; circle(c, 600, 42, 14); c.fill(); circle(c, 620, 48, 10); c.fill();
-  c.fillStyle = '#7fb069'; c.beginPath(); c.moveTo(560, 108); c.lineTo(720, 108); c.lineTo(700, 84); c.lineTo(580, 84); c.closePath(); c.fill();
-  c.strokeStyle = '#8a5a2e'; c.lineWidth = 5; rr(c, 560, 18, 160, 90, 8); c.stroke();
-  c.beginPath(); c.moveTo(640, 18); c.lineTo(640, 108); c.moveTo(560, 63); c.lineTo(720, 63); c.stroke();
-  // lantai ubin
-  c.fillStyle = '#d8c49a'; c.fillRect(0, 200, W, H - 200);
-  c.fillStyle = '#cdb586';
-  for (let y = 200; y < H; y += 56) for (let x = ((y / 56) % 2 ? 28 : 0); x < W; x += 56) {
-    c.beginPath(); c.moveTo(x + 28, y); c.lineTo(x + 56, y + 28); c.lineTo(x + 28, y + 56); c.lineTo(x, y + 28); c.closePath(); c.fill();
-  }
-  // karpet merah di bawah meja
-  c.fillStyle = '#a83232'; rr(c, 196, 690, 820, 22, 6); c.fill();
-  c.fillStyle = '#c85050'; rr(c, 206, 694, 800, 14, 4); c.fill();
+  // lantai kayu: papan horizontal dengan garis sambungan yang halus
+  c.fillStyle = '#e6cf9f'; c.fillRect(0, 200, W, H - 200);
+  c.fillStyle = 'rgba(255,255,255,0.16)';
+  for (let y = 200; y < H; y += 128) c.fillRect(0, y, W, 64);
+  c.strokeStyle = '#d3b57e'; c.lineWidth = 2;
+  for (let y = 200; y < H; y += 64) { c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); }
+  // garis dasar dinding (baseboard) — rapi, bukan karpet
+  c.fillStyle = '#b98d4f'; c.fillRect(0, 196, W, 6);
 }
 
 // ---- Bar atas ----
@@ -238,14 +231,16 @@ function drawBins(c, g) {
     const empty = stock <= 0;
     // nampan baja
     const grad = c.createLinearGradient(b.x, b.y, b.x, b.y + b.h);
-    grad.addColorStop(0, '#d8dce2'); grad.addColorStop(1, '#9aa0a8');
+    grad.addColorStop(0, '#e8ebef'); grad.addColorStop(1, '#9aa0a8');
     rr(c, b.x, b.y, b.w, b.h, 8); c.fillStyle = grad; c.fill();
     c.strokeStyle = '#6a7076'; c.lineWidth = 2; c.stroke();
+    // kilau atas nampan
+    c.fillStyle = 'rgba(255,255,255,0.5)'; rr(c, b.x + 4, b.y + 3, b.w - 8, 5, 2); c.fill();
     if (empty) { c.fillStyle = 'rgba(40,30,20,0.45)'; rr(c, b.x, b.y, b.w, b.h, 8); c.fill(); }
-    drawFood(c, b.id, b.x + b.w / 2, b.y + 30, 40);
+    drawFood(c, b.id, b.x + b.w / 2, b.y + 32, 44);
     // label + stok
-    pill(c, b.x + 4, b.y + b.h - 20, b.w - 8, 16, 'rgba(20,12,6,0.85)');
-    text(c, ing.name.toUpperCase(), b.x + b.w / 2, b.y + b.h - 11, 9, '#ffffff');
+    pill(c, b.x + 4, b.y + b.h - 21, b.w - 8, 17, 'rgba(20,12,6,0.88)');
+    text(c, ing.name.toUpperCase(), b.x + b.w / 2, b.y + b.h - 12, 10, '#ffffff');
     if (stock < ing.maxStock) {
       pill(c, b.x + b.w - 20, b.y + 2, 18, 16, '#7a1e1e');
       text(c, String(stock), b.x + b.w - 11, b.y + 11, 11, '#ffffff');
@@ -257,6 +252,15 @@ function drawBins(c, g) {
 }
 
 // ---- Stasiun masak ----
+// slot kosong: lingkaran garis putus-putus (jelas sebagai "belum terisi")
+function emptySlot(c, x, y) {
+  c.save();
+  c.strokeStyle = 'rgba(230,230,230,0.55)'; c.lineWidth = 2; c.setLineDash([6, 6]);
+  circle(c, x, y, 30); c.stroke();
+  c.setLineDash([]);
+  text(c, 'kosong', x, y + 44, 11, 'rgba(230,230,230,0.75)', 'center', false);
+  c.restore();
+}
 function cookBar(c, x, y, w, pct) {
   rr(c, x, y, w, 10, 5); c.fillStyle = '#221610'; c.fill();
   let col = '#58b368';
@@ -318,7 +322,7 @@ function drawStations(c, g) {
         circle(c, sx + 55 + Math.cos(g.time * 5 + i) * 6, sy + 4, 2.5); c.fill();
       }
     } else {
-      text(c, 'kosong', sx + 42, sy + 34, 12, '#9aa0a8', 'center', false);
+      emptySlot(c, sx + 42, sy + 34);
     }
   }
   // --- Panggangan ---
@@ -344,7 +348,7 @@ function drawStations(c, g) {
       cookBar(c, sx, sy + 86, 84, pct);
       if (pct > 100) { c.fillStyle = 'rgba(60,60,60,0.5)'; circle(c, sx + 42, sy + 34, 30); c.fill(); }
     } else {
-      text(c, 'kosong', sx + 42, sy + 34, 12, '#9aa0a8', 'center', false);
+      emptySlot(c, sx + 42, sy + 34);
     }
   }
 }
@@ -362,7 +366,7 @@ function drawBoard(c, g) {
   c.strokeStyle = '#a87c3e'; c.lineWidth = 2; c.stroke();
   // tumpukan layer
   if (g.board.length === 0) {
-    text(c, 'Klik bahan sesuai resep', b.x + b.w / 2, b.y + 88, 13, '#8a5a2e', 'center', false);
+    text(c, 'Klik bahan sesuai resep', b.x + b.w / 2, b.y + 88, 13, '#5a3418');
   } else {
     const n = g.board.length;
     g.board.forEach((layer, i) => {
@@ -425,6 +429,11 @@ function drawPlates(c, g) {
   rr(c, t.x, t.y, t.w, t.h, 12); c.fillStyle = '#3a3d42'; c.fill();
   c.strokeStyle = '#22242a'; c.lineWidth = 3; c.stroke();
   c.fillStyle = '#5a5f66'; rr(c, t.x + 12, t.y + 24, t.w - 24, 120, 8); c.fill();
+  // ikon tempat sampah
+  c.fillStyle = '#8a8f96'; rr(c, t.x + t.w / 2 - 22, t.y + 62, 44, 52, 6); c.fill();
+  c.fillStyle = '#6a7076'; rr(c, t.x + t.w / 2 - 26, t.y + 52, 52, 10, 4); c.fill();
+  c.fillStyle = '#3a3d42';
+  [-12, 0, 12].forEach(o => { rr(c, t.x + t.w / 2 + o - 2, t.y + 76, 4, 26, 2); c.fill(); });
   text(c, 'SAMPAH', t.x + t.w / 2, t.y + 18, 12, '#ffffff');
   text(c, 'Buang bahan', t.x + t.w / 2, t.y + 160, 11, '#d8dce2', 'center', false);
   text(c, 'gosong di sini', t.x + t.w / 2, t.y + 176, 11, '#d8dce2', 'center', false);
@@ -466,7 +475,9 @@ function drawOrderBoard(c, g) {
       const recipe = RECIPES[o.recipeId];
       const frac = Math.max(0, o.patience / o.maxPatience);
       text(c, 'PESANAN #' + String(o.id).padStart(2, '0'), L.railR.x + 132, y + 18, 13, '#8a5a2e');
-      drawFood(c, recipe.layers[3] ? recipe.layers[3].item : recipe.layers[0].item, L.railR.x + 40, y + 52, 44);
+      // ikon hidangan: tumpukan mini 3 lapis (bukan 1 bahan saja)
+      const iconLayers = [recipe.layers[0], recipe.layers[Math.floor(recipe.layers.length / 2)], recipe.layers[recipe.layers.length - 1]];
+      iconLayers.forEach((layer, k) => drawFood(c, layer.item, L.railR.x + 40, y + 62 - k * 8, 34));
       text(c, recipe.name, L.railR.x + 132, y + 52, 15, '#3a2110', 'left');
       text(c, 'Hadiah: ' + o.reward + ' koin', L.railR.x + 132, y + 74, 12, '#8a5a2e', 'left', false);
       // daftar bahan
